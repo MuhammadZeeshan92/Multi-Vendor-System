@@ -20,15 +20,15 @@ const {
 router.get("/", getAllProducts);
 
 // Vendor Dashboard Products
-router.get("/vendor",protect,authorizeRoles("vendor"),getVendorProducts);
+router.get("/vendor",protect,authorizeRoles("seller"),getVendorProducts);
 
 // Vendor Create
-router.post("/",protect,authorizeRoles("vendor"),createProduct);
+router.post("/",protect,authorizeRoles("seller"),createProduct);
 
 // Vendor Update
-router.put("/:id",protect,authorizeRoles("vendor"),updateProduct);
+router.put("/:id",protect,authorizeRoles("seller"),updateProduct);
 
 // Vendor Delete
-router.delete("/:id",protect,authorizeRoles("vendor"),deleteProduct);
+router.delete("/:id",protect,authorizeRoles("seller"),deleteProduct);
 
 module.exports = router;

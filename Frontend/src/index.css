@@ -2,4 +2,37 @@
 @tailwind components;
 @tailwind utilities;
 
-/* custom global styles can go here */
+@layer base {
+	:root {
+		--bg: #f9fafb;
+		--card: #ffffff;
+		--muted: #6b7280;
+		--primary: #4f46e5;
+		--success: #10b981;
+		--accent: #f59e0b;
+	}
+
+	html, body, #root { height: 100%; }
+
+	body {
+		@apply bg-[var(--bg)] font-sans text-gray-700 antialiased;
+	}
+
+	a { @apply text-[var(--primary)] hover:underline; }
+	h1,h2,h3,h4 { color: #111827; }
+}
+
+@layer components {
+	.container { @apply max-w-7xl mx-auto px-4 md:px-6; }
+
+	.hero { @apply bg-white rounded-xl shadow-md p-8 mb-8; }
+
+	.card { @apply bg-[var(--card)] rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 overflow-hidden; }
+
+	.btn-primary { @apply bg-[var(--primary)] text-white rounded-lg px-5 py-2 font-medium hover:bg-indigo-700 transition duration-200; }
+	.btn-ghost { @apply bg-white border border-gray-200 text-gray-800 rounded-lg px-4 py-2 hover:shadow-sm; }
+}
+
+@layer utilities {
+	.scale-hover:hover { transform: scale(1.02); }
+}

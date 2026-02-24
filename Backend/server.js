@@ -6,6 +6,7 @@ const authRoutes = require("./routes/auth.route.js");
 const cookieParser = require("cookie-parser");
 const productRoutes = require("./routes/product.route.js");
 const orderRoutes = require("./routes/order.route.js");
+const cloudinaryRoutes = require("./routes/cloudinary.route.js");
 
 
 
@@ -18,7 +19,12 @@ const app = express();
 connectDB();
 
 // Middlewares
-app.use(cors());
+app.use(cors(
+    {
+        origin: "http://localhost:5173",
+        credentials: true,
+    }
+));
 app.use(express.json());
 app.use(cookieParser());
 
@@ -33,6 +39,7 @@ app.use(
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
+app.use("/api", cloudinaryRoutes);
 
 
 // Health Route

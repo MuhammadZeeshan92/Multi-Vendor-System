@@ -1,7 +1,8 @@
 import React from 'react';
+import { Outlet } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 
-const VendorLayout = ({ children }) => {
+const VendorLayout = () => {
   const links = [
     { to: '/vendor/dashboard', label: 'Dashboard' },
     { to: '/vendor/products', label: 'Products' },
@@ -11,7 +12,9 @@ const VendorLayout = ({ children }) => {
   return (
     <div className="flex">
       <Sidebar links={links} />
-      <div className="flex-1 p-6">{children}</div>
+      <div className="flex-1 p-6">
+        <Outlet />
+      </div>
     </div>
   );
 };

@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { registerUser } from '../../features/auth/authSlice';
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 
 const Register = () => {
   const dispatch = useDispatch();
   const { user, status, error } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     name: '',
     email: '',
@@ -24,7 +25,16 @@ const Register = () => {
     dispatch(registerUser(form));
   };
 
-//   if (user) return <Navigate to="/" replace />;
+  // when registration succeeds clear the form and send user to login
+  useEffect(() => {
+    if (status === 'succeeded') {
+      setForm({ name: '', email: '', password: '', role: 'buyer' });
+      navigate('/auth/login');
+    }
+  }, [status, navigate]);
+
+
+  // (we don't redirect based on user here; registration always goes to login)
 
   return (
     <div className="max-w-md mx-auto mt-10">

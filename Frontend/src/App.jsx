@@ -11,6 +11,7 @@ import RoleRoute from './routes/RoleRoute';
 // pages
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
+import Home from './pages/Home';
 import ProductList from './pages/products/ProductList';
 import ProductDetail from './pages/products/ProductDetail';
 import CartPage from './pages/cart/CartPage';
@@ -43,7 +44,7 @@ function App() {
         <Navbar />
         <main className="flex-1">
           <Routes>
-            <Route path="/" element={<ProductList />} />
+            <Route path="/" element={<Home />} />
             <Route path="/products" element={<ProductList />} />
             <Route path="/products/:id" element={<ProductDetail />} />
 

@@ -19,6 +19,6 @@ router.post("/", protect, authorizeRoles("customer"),createOrder);
 router.get("/my",protect,authorizeRoles("customer"),getMyOrders);
 
 // Vendor sees orders containing their products
-router.get("/vendor",protect,authorizeRoles("vendor"),getVendorOrders);
+router.get("/vendor",protect,authorizeRoles("seller"),getVendorOrders);
 
 module.exports = router;

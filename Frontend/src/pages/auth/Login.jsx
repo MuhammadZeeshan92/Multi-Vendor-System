@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginUser } from '../../features/auth/authSlice';
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 
@@ -19,7 +19,16 @@ const Login = () => {
     dispatch(loginUser(form));
   };
 
-//   if (user) return <Navigate to="/" replace />;
+  const navigate = useNavigate();
+
+  // redirect user immediately after login based on their role
+  useEffect(() => {
+    if (user) {
+      if (user.role === 'seller') navigate('/vendor/dashboard');
+      else if (user.role === 'admin') navigate('/admin/dashboard');
+      else navigate('/');
+    }
+  }, [user, navigate]);
 
   return (
     <div className="max-w-md mx-auto mt-10">

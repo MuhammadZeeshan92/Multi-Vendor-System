@@ -36,14 +36,17 @@ exports.registerUser = async (req, res) => {
 exports.loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
+        console.debug('Login attempt for:', email);
 
         const user = await User.findOne({ email });
         if (!user) {
+            console.debug('Login failed: user not found', email);
             return res.status(400).json({ message: "Invalid credentials" });
         }
 
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
+            console.debug('Login failed: invalid password for', email);
             return res.status(400).json({ message: "Invalid credentials" });
         }
 
@@ -78,3 +81,19 @@ exports.logoutUser = (req, res) => {
     });
     res.status(200).json({ message: "Logout successful" });
 }
+
+// Get current authenticated user
+exports.getCurrentUser = async (req, res) => {
+    try {
+        const token = req.cookies && req.cookies.token;
+        if (!token) return res.status(401).json({ message: 'Not authenticated' });
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const user = await User.findById(decoded.id).select('-password');
+        if (!user) return res.status(404).json({ message: 'User not found' });
+
+        return res.status(200).json(user);
+    } catch (error) {
+        return res.status(401).json({ message: 'Invalid token' });
+    }
+};

@@ -63,7 +63,10 @@ const authSlice = createSlice({
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.payload;
+        // payload may be an object from rejectWithValue, otherwise use action.error
+        state.error = action.payload
+          ? action.payload.message || String(action.payload)
+          : action.error.message;
       })
       .addCase(loginUser.pending, (state) => {
         state.status = 'loading';
@@ -74,10 +77,23 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.payload;
+         state.error = action.payload
+          ? action.payload.message || String(action.payload)
+          : action.error.message;
+      })
+      .addCase(fetchCurrentUser.pending, (state) => {
+        state.status = 'loading';
+        state.error = null;
       })
       .addCase(fetchCurrentUser.fulfilled, (state, action) => {
+        state.status = 'succeeded';
         state.user = action.payload;
+      })
+      .addCase(fetchCurrentUser.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload
+          ? action.payload.message || String(action.payload)
+          : action.error.message;
       });
   },
 });
