@@ -20,48 +20,15 @@ const {
 router.get("/", getAllProducts);
 
 // Vendor Dashboard Products
-router.get(
-  "/vendor",
-  protect,
-  authorizeRoles("vendor"),
-  getVendorProducts
-);
+router.get("/vendor",protect,authorizeRoles("vendor"),getVendorProducts);
 
 // Vendor Create
-router.post(
-  "/",
-  protect,
-  authorizeRoles("vendor"),
-  createProduct
-);
+router.post("/",protect,authorizeRoles("vendor"),createProduct);
 
 // Vendor Update
-router.put(
-  "/:id",
-  protect,
-  authorizeRoles("vendor"),
-  updateProduct
-);
+router.put("/:id",protect,authorizeRoles("vendor"),updateProduct);
 
 // Vendor Delete
-router.delete(
-  "/:id",
-  protect,
-  authorizeRoles("vendor"),
-  deleteProduct
-);
-
-
-
-// Public
-router.get("/", getAllProducts);
-
-// Vendor Only
-router.post(
-  "/",
-  protect,
-  authorizeRoles("vendor"),
-  createProduct
-);
+router.delete("/:id",protect,authorizeRoles("vendor"),deleteProduct);
 
 module.exports = router;
