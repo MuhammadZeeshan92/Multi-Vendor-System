@@ -7,6 +7,7 @@ const AdminLayout = () => {
     { to: '/admin/dashboard', label: 'Dashboard' },
     { to: '/admin/users', label: 'Users' },
     { to: '/admin/commission', label: 'Commission' },
+    { to: '/admin/vendors', label: 'Vendors' },
   ];
   return (
     <div className="flex">

@@ -39,9 +39,15 @@ exports.loginUser = async (req, res) => {
         console.debug('Login attempt for:', email);
 
         const user = await User.findOne({ email });
+
         if (!user) {
             console.debug('Login failed: user not found', email);
             return res.status(400).json({ message: "Invalid credentials" });
+        }
+
+        if (!user.isActive) {
+            console.debug('Login failed: account not active for', email);
+            return res.status(403).json({ message: "Account not active. Please contact support." });
         }
 
         const isMatch = await bcrypt.compare(password, user.password);

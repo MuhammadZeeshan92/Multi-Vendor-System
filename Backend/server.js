@@ -6,6 +6,7 @@ const authRoutes = require("./routes/auth.route.js");
 const cookieParser = require("cookie-parser");
 const productRoutes = require("./routes/product.route.js");
 const orderRoutes = require("./routes/order.route.js");
+const adminRoutes = require("./routes/admin.routes.js");
 const cloudinaryRoutes = require("./routes/cloudinary.route.js");
 
 
@@ -40,6 +41,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api", cloudinaryRoutes);
+app.use("/api/admin", adminRoutes);
 
 
 // Health Route

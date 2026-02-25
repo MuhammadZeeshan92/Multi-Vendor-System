@@ -26,6 +26,7 @@ import VendorLayout from './layouts/VendorLayout';
 import AdminLayout from './layouts/AdminLayout';
 import AdminDashboard from './pages/admin/Dashboard';
 import AdminUsers from './pages/admin/Users';
+import AdminVendors from './pages/admin/AdminVendor';
 import Commission from './pages/admin/Commission';
 import Forbidden from './pages/misc/Forbidden';
 import NotFound from './pages/misc/NotFound';
@@ -77,6 +78,7 @@ function App() {
                   <Route path="/admin/dashboard" element={<AdminDashboard />} />
                   <Route path="/admin/users" element={<AdminUsers />} />
                   <Route path="/admin/commission" element={<Commission />} />
+                  <Route path="/admin/vendors" element={<AdminVendors />} />
                 </Route>
               </Route>
             </Route>

@@ -23,6 +23,14 @@ const userSchema = new mongoose.Schema(
       enum: ["admin", "seller", "buyer"],
       default: "buyer",
     },
+    isActive: {
+      type: Boolean,
+      default: false,
+    },
+    isBlocked: {
+      type: Boolean,
+      default: false, // Admin can block later
+    }
   },
   { timestamps: true }
 );
