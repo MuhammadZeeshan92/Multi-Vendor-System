@@ -33,12 +33,33 @@ const AdminUsers = () => {
               <td className="border px-4 py-2">{u.email}</td>
               <td className="border px-4 py-2">{u.role}</td>
               <td className="border px-4 py-2">
-                <Button
-                  variant="secondary"
-                  onClick={() => dispatch(toggleUserActive({ id: u._id, active: !u.isActive }))}
-                >
-                  {u.isActive ? 'Deactivate' : 'Activate'}
-                </Button>
+
+                {!u.isBlocked && (
+                  <Button
+                    variant="destructive"
+                    onClick={() => dispatch(blockUser(u._id))}
+                  >
+                    Block Permanently
+                  </Button>
+                )}
+
+                {!u.isBlocked && (
+                  <Button
+                    variant="secondary"
+                    onClick={() =>
+                      dispatch(toggleUserActive({ id: u._id, active: !u.isActive }))
+                    }
+                  >
+                    {u.isActive ? "Deactivate" : "Activate"}
+                  </Button>
+                )}
+
+                {u.isBlocked && (
+                  <span className="text-red-600 font-bold">
+                    Permanently Blocked
+                  </span>
+                )}
+
               </td>
             </tr>
           ))}

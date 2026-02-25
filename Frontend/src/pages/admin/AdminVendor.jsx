@@ -32,14 +32,36 @@ const AdminVendors = () => {
               <td className="border px-4 py-2">{v.name}</td>
               <td className="border px-4 py-2">{v.email}</td>
               <td className="border px-4 py-2">
-                <Button
-                  variant="secondary"
-                  onClick={() =>
-                    dispatch(toggleUserActive({ id: v._id, active: !v.isActive }))
-                  }
-                >
-                  {v.isActive ? 'Deactivate' : 'Activate'}
-                </Button>
+
+                {/* Permanent Block Button */}
+                {!v.isBlocked && (
+                  <Button
+                    variant="destructive"
+                    onClick={() => dispatch(blockUser(v._id))}
+                  >
+                    Block Permanently
+                  </Button>
+                )}
+
+                {/* Active Toggle - Only if NOT Blocked */}
+                {!v.isBlocked && (
+                  <Button
+                    variant="secondary"
+                    onClick={() =>
+                      dispatch(toggleUserActive({ id: v._id, active: !v.isActive }))
+                    }
+                  >
+                    {v.isActive ? "Deactivate" : "Activate"}
+                  </Button>
+                )}
+
+                {/* If Blocked */}
+                {v.isBlocked && (
+                  <span className="text-red-600 font-bold">
+                    Permanently Blocked
+                  </span>
+                )}
+
               </td>
             </tr>
           ))}

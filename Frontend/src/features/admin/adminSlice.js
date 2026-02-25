@@ -13,6 +13,20 @@ export const fetchUsers = createAsyncThunk(
   }
 );
 
+export const blockUser = createAsyncThunk(
+  "admin/blockUser",
+  async (id, thunkAPI) => {
+    try {
+      const response = await api.put(`/admin/users/${id}/block`);
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data || error.message
+      );
+    }
+  }
+);
+
 export const fetchVendors = createAsyncThunk(
   'admin/fetchVendors',
   async (_, thunkAPI) => {
@@ -147,6 +161,19 @@ const adminSlice = createSlice({
       .addCase(fetchActiveSellers.fulfilled, (state, action) => {
         state.activeSellersList = action.payload.sellers;
         state.sellerTotalPages = action.payload.totalPages;
+      })
+      .addCase(blockUser.fulfilled, (state, action) => {
+        const updated = action.payload;
+
+        const userIdx = state.users.findIndex(
+          (u) => u._id === updated._id
+        );
+        if (userIdx !== -1) state.users[userIdx] = updated;
+
+        const vendorIdx = state.vendors.findIndex(
+          (v) => v._id === updated._id
+        );
+        if (vendorIdx !== -1) state.vendors[vendorIdx] = updated;
       })
       .addCase(fetchCommissionReport.fulfilled, (state, action) => {
         state.commission = action.payload;

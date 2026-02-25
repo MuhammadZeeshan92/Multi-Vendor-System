@@ -45,9 +45,12 @@ exports.loginUser = async (req, res) => {
             return res.status(400).json({ message: "Invalid credentials" });
         }
 
-        if (!user.isActive) {
+        if (user.isActive) {
             console.debug('Login failed: account not active for', email);
             return res.status(403).json({ message: "Account not active. Please contact support." });
+        }
+        if (user.isBlocked) {
+            return res.status(403).json({ message: "Account permanently blocked" });
         }
 
         const isMatch = await bcrypt.compare(password, user.password);

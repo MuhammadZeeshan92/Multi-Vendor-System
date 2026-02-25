@@ -6,7 +6,8 @@ const {
   toggleUserStatus,
   getDashboardStats,
   getActiveUsers,
-  getActiveSellers
+  getActiveSellers,
+  blockUser,
 } = require("../controllers/admin.controller");
 
 const { protect, authorizeRoles } = require("../middleware/auth.middleware");
@@ -19,5 +20,7 @@ router.get("/dashboard", protect, authorizeRoles("admin"), getDashboardStats);
 
 router.get("/active-users", protect, authorizeRoles("admin"), getActiveUsers);
 router.get("/active-sellers", protect, authorizeRoles("admin"), getActiveSellers);
+
+router.put("/users/:id/block", protect, authorizeRoles("admin"), blockUser);
 
 module.exports = router;

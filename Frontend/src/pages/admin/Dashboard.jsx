@@ -6,6 +6,7 @@ import {
   fetchActiveSellers,
 } from "../../features/admin/adminSlice";
 
+import { blockUser } from "../../features/admin/adminSlice";
 import { StatCard } from "../../components/StatCard";
 import { ListSection } from "../../components/ListSection";
 
@@ -61,6 +62,8 @@ const AdminDashboard = () => {
         currentPage={userPage}
         totalPages={userTotalPages}
         onPageChange={setUserPage}
+        showBlockButton={true}
+        onBlock={(id) => dispatch(blockUser(id))}
       />
 
       {/* ACTIVE SELLERS */}
@@ -70,6 +73,8 @@ const AdminDashboard = () => {
         currentPage={sellerPage}
         totalPages={sellerTotalPages}
         onPageChange={setSellerPage}
+        showBlockButton={true}
+        onBlock={(id) => dispatch(blockUser(id))}
       />
     </div>
   );
