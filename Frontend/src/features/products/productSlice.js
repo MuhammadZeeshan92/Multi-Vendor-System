@@ -7,6 +7,7 @@ export const fetchProducts = createAsyncThunk(
   async (params, thunkAPI) => {
     try {
       const response = await api.get('/products', { params });
+      console.log('Fetched products:', response.data);
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data || error.message);
@@ -32,7 +33,7 @@ const initialState = {
       _id: 'prod_1',
       name: 'Minimalist Chair',
       price: 129.99,
-      images: ['https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&q=60&auto=format&fit=crop'],
+      images: ['https://res.cloudinary.com/dkqrfflov/image/upload/v1772366207/products/yxr8tbvavt2tb0irfizu.png'],
       stock: 12,
       isActive: true,
       vendorId: 'vendor_1',
@@ -42,31 +43,11 @@ const initialState = {
       _id: 'prod_2',
       name: 'Oak Coffee Table',
       price: 249.0,
-      images: ['https://images.unsplash.com/photo-1540574163026-643ea20ade25?w=800&q=60&auto=format&fit=crop'],
+      images: ['https://res.cloudinary.com/dkqrfflov/image/upload/v1772366207/products/yxr8tbvavt2tb0irfizu.png'],
       stock: 5,
       isActive: true,
       vendorId: 'vendor_2',
       description: 'Solid oak coffee table with a warm finish.'
-    },
-    {
-      _id: 'prod_3',
-      name: 'Ceramic Vase',
-      price: 39.5,
-      images: ['https://images.unsplash.com/photo-1505691723518-36a063d3b6b8?w=800&q=60&auto=format&fit=crop'],
-      stock: 0,
-      isActive: true,
-      vendorId: 'vendor_3',
-      description: 'Handmade ceramic vase with matte glaze.'
-    },
-    {
-      _id: 'prod_4',
-      name: 'Cozy Throw Blanket',
-      price: 59.99,
-      images: ['https://images.unsplash.com/photo-1542977276-0a4f1c4a1f47?w=800&q=60&auto=format&fit=crop'],
-      stock: 3,
-      isActive: true,
-      vendorId: 'vendor_1',
-      description: 'Soft throw blanket to warm up any space.'
     }
   ],
   current: null,
@@ -87,7 +68,11 @@ const productSlice = createSlice({
       .addCase(fetchProducts.fulfilled, (state, action) => {
         state.status = 'succeeded';
         // ensure we always have an array even if backend response shape is unexpected
-        state.list = (action.payload && action.payload.products) || [];
+        if (Array.isArray(action.payload)) {
+          state.list = action.payload;
+        } else {
+          state.list = action.payload.products || [];
+        }
         state.pagination = (action.payload && action.payload.pagination) || null;
       })
       .addCase(fetchProducts.rejected, (state, action) => {

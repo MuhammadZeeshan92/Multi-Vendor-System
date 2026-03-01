@@ -37,6 +37,7 @@ exports.loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
         console.debug('Login attempt for:', email);
+        console.debug('Login attempt for:', password);
 
         const user = await User.findOne({ email });
 
@@ -45,7 +46,7 @@ exports.loginUser = async (req, res) => {
             return res.status(400).json({ message: "Invalid credentials" });
         }
 
-        if (user.isActive) {
+        if (!user.isActive) {
             console.debug('Login failed: account not active for', email);
             return res.status(403).json({ message: "Account not active. Please contact support." });
         }

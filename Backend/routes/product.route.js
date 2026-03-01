@@ -10,6 +10,7 @@ const {
 const {
   createProduct,
   getAllProducts,
+  getProductById
 } = require("../controllers/product.controller.js");
 
 const {
@@ -18,6 +19,7 @@ const {
 } = require("../middleware/auth.middleware");
 
 router.get("/", getAllProducts);
+router.get('/:id', getProductById);
 
 // Vendor Dashboard Products
 router.get("/vendor",protect,authorizeRoles("seller"),getVendorProducts);
