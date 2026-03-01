@@ -33,6 +33,13 @@ import Forbidden from './pages/misc/Forbidden';
 import NotFound from './pages/misc/NotFound';
 import VendorStorefront from './pages/vendors/VendorStorefront';
 import VendorList from './pages/vendors/VendorList';
+import BuyerLayout from './layouts/BuyerLayout';
+import BuyerDashboard from './pages/buyers/Dashboard';
+import BuyerOrders from './pages/buyers/Orders';
+import FollowedVendors from './pages/buyers/FollowedVendors';
+// import Wishlist from './pages/buyer/Wishlist';
+// import BuyerReviews from './pages/buyer/Reviews';
+import BuyerSettings from './pages/buyers/Settings';
 
 function App() {
   const dispatch = useDispatch();
@@ -65,7 +72,16 @@ function App() {
             {/* Vendor discovery & storefront */}
             <Route path="/vendors" element={<VendorList />} />
             <Route path="/vendors/:id" element={<VendorStorefront />} />
-
+            <Route element={<RoleRoute allowedRoles={['buyer']} />}>
+              <Route element={<BuyerLayout />}>
+                <Route path="/buyer/dashboard" element={<BuyerDashboard />} />
+                <Route path="/buyer/orders" element={<BuyerOrders />} />
+                <Route path="/buyer/vendors" element={<FollowedVendors />} />
+                {/* <Route path="wishlist" element={<Wishlist />} />
+              <Route path="reviews" element={<BuyerReviews />} /> */}
+                <Route path="/buyer/settings" element={<BuyerSettings />} />
+              </Route>
+            </Route>
             {/* auth */}
             <Route path="/auth">
               <Route path="login" element={<Login />} />

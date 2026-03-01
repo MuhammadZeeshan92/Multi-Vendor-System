@@ -22,7 +22,7 @@ const AddProduct = () => {
   useEffect(() => {
     return () => {
       imageFiles.forEach((it) => {
-        try { URL.revokeObjectURL(it.preview); } catch (e) {}
+        try { URL.revokeObjectURL(it.preview); } catch (e) { }
       });
     };
   }, [imageFiles]);
@@ -82,12 +82,20 @@ const AddProduct = () => {
     }
 
     const maxFiles = 4; // allow up to 4 images
-    if (files.length > maxFiles) {
+    let newFiles = files.slice(0, maxFiles);
+
+    if (newFiles.length > maxFiles) {
       alert(`You can upload up to ${maxFiles} images. Only the first ${maxFiles} will be used.`);
     }
 
-    const limited = files.slice(0, maxFiles);
-    const previews = limited.map((f) => ({ file: f, preview: URL.createObjectURL(f) }));
+    const combinedFiles = [...imageFiles, ...newFiles].slice(0, maxFiles);
+
+    // const limited = files.slice(0, maxFiles);
+    // const previews = limited.map((f) => ({ file: f, preview: URL.createObjectURL(f) }));
+    const previews = combinedFiles.map((f) => ({
+      file: f.file || f, // handle both File or existing {file, preview}
+      preview: f.preview || URL.createObjectURL(f),
+    }));
     setImageFiles(previews);
     // reset previously uploaded urls until submit
     setForm({ ...form, images: [] });
@@ -111,7 +119,7 @@ const AddProduct = () => {
         }
 
         const sigResp = await api.get('/cloudinary-signature');
-        
+
         const sigParams = sigResp.data;
 
         const uploadPromises = imageFiles.map(({ file }, idx) =>
@@ -209,7 +217,18 @@ const AddProduct = () => {
             <div className="flex flex-col gap-2 mt-2">
               <div className="flex gap-2">
                 {imageFiles.map((it, idx) => (
-                  <img key={idx} src={it.preview} alt="preview" className="w-20 h-20 object-cover" />
+                  <div key={idx} className="relative">
+                    <img src={it.preview} className="w-20 h-20 object-cover rounded" />
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setImageFiles(prev => prev.filter((_, i) => i !== idx))
+                      }
+                      className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center"
+                    >
+                      ×
+                    </button>
+                  </div>
                 ))}
               </div>
               {uploadProgress.length > 0 && (

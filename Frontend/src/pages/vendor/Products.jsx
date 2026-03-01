@@ -6,6 +6,7 @@ const VendorProducts = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [currentImageIndex, setCurrentImageIndex] = useState({});
 
   useEffect(() => {
     let mounted = true;
@@ -68,13 +69,53 @@ const VendorProducts = () => {
           )}
           {products.map((product) => (
             <div key={product._id} className="card p-3 flex flex-col gap-2">
-              <div className="h-40 flex items-center justify-center bg-gray-50 rounded-lg overflow-hidden">
-                {product.images && product.images[0] ? (
-                  <img
-                    src={product.images[0]}
-                    alt={product.name}
-                    className="max-h-40 object-contain"
-                  />
+              <div className="h-40 relative bg-gray-50 rounded-lg overflow-hidden flex items-center justify-center">
+                {product.images && product.images.length > 0 ? (
+                  <>
+                    <img
+                      src={product.images[currentImageIndex[product._id] || 0]}
+                      alt={product.name}
+                      className="max-h-full max-w-full object-contain"
+                    />
+
+                    {product.images.length > 1 && (
+                      <>
+                        {/* Prev button */}
+                        <button
+                          onClick={() => setCurrentImageIndex(prev => ({
+                            ...prev,
+                            [product._id]: (prev[product._id] || 0) - 1 < 0
+                              ? product.images.length - 1
+                              : (prev[product._id] || 0) - 1
+                          }))}
+                          className="absolute left-1 top-1/2 -translate-y-1/2 bg-gray-200 rounded-full w-6 h-6 flex items-center justify-center text-gray-700 hover:bg-gray-300 z-10"
+                        >
+                          ‹
+                        </button>
+
+                        {/* Next button */}
+                        <button
+                          onClick={() => setCurrentImageIndex(prev => ({
+                            ...prev,
+                            [product._id]: ((prev[product._id] || 0) + 1) % product.images.length
+                          }))}
+                          className="absolute right-1 top-1/2 -translate-y-1/2 bg-gray-200 rounded-full w-6 h-6 flex items-center justify-center text-gray-700 hover:bg-gray-300 z-10"
+                        >
+                          ›
+                        </button>
+
+                        {/* Dots */}
+                        <div className="absolute bottom-1 left-1/2 -translate-x-1/2 flex gap-1 z-10">
+                          {product.images.map((_, idx) => (
+                            <span
+                              key={idx}
+                              className={`w-2 h-2 rounded-full ${currentImageIndex[product._id] === idx ? 'bg-indigo-600' : 'bg-gray-300'}`}
+                            />
+                          ))}
+                        </div>
+                      </>
+                    )}
+                  </>
                 ) : (
                   <div className="text-gray-400 text-sm">No image</div>
                 )}

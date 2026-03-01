@@ -1,6 +1,10 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 
 const VendorProfileCard = ({ vendor }) => {
+  const user = useSelector((state) => state.auth.user);
+  // const isFollowing = user?.following.includes(vendor._id);
+
   if (!vendor) return null;
 
   return (
@@ -22,7 +26,7 @@ const VendorProfileCard = ({ vendor }) => {
       <div className="flex-1 space-y-1 text-center md:text-left">
         <div className="flex flex-col md:flex-row md:items-center md:gap-2 justify-center md:justify-start">
           <h1 className="text-2xl font-semibold text-gray-900">{vendor.name}</h1>
-          {vendor.isVerified && (
+          {vendor.isActive && (
             <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 text-xs font-medium">
               Verified
             </span>
@@ -50,13 +54,7 @@ const VendorProfileCard = ({ vendor }) => {
             type="button"
             className="bg-indigo-600 text-white rounded-lg px-4 py-1.5 text-sm font-medium hover:bg-indigo-700 transition duration-200"
           >
-            Follow Store
-          </button>
-          <button
-            type="button"
-            className="bg-gray-100 text-gray-800 rounded-lg px-4 py-1.5 text-sm font-medium hover:bg-gray-200 transition duration-200"
-          >
-            Contact Seller
+            {user?.role === 'buyer' ? 'Follow Store' : 'View Store'}
           </button>
         </div>
       </div>

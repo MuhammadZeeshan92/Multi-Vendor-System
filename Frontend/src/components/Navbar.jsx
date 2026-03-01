@@ -1,8 +1,11 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-
+import { logoutUser } from '../features/auth/authSlice';
+import { useDispatch } from 'react-redux';
+import { toast } from 'react-toastify';
 const NavItem = ({ to, children }) => (
+  
   <NavLink
     to={to}
     className={({ isActive }) =>
@@ -19,6 +22,14 @@ const NavItem = ({ to, children }) => (
 
 const Navbar = () => {
   const user = useSelector((state) => state.auth.user);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const handleLogout = (e) => {
+    e.preventDefault();
+    dispatch(logoutUser());
+    toast.info('Logged out successfully');
+    navigate('/auth/login');
+  };
 
   return (
   <nav className="bg-white/90 backdrop-blur border-b border-gray-100 sticky top-0 z-40">
@@ -42,9 +53,12 @@ const Navbar = () => {
             <>
               {user.role === 'seller' && <NavItem to="/vendor/dashboard">Vendor</NavItem>}
               {user.role === 'admin' && <NavItem to="/admin/dashboard">Admin</NavItem>}
+              {user.role === 'buyer' && <NavItem to="/buyer/dashboard">Buyer</NavItem>}
               <NavItem to="/cart">Cart</NavItem>
+              <button onClick={handleLogout} className="px-3 py-2 text-sm font-medium rounded-full transition-colors bg-indigo-50 text-indigo-700 hover:text-gray-900 hover:bg-gray-50">Logout</button>
             </>
           ) : (
+            
             <NavItem to="/auth/login">Login</NavItem>
           )}
         </div>

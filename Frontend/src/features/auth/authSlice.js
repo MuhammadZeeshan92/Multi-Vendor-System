@@ -38,6 +38,20 @@ export const fetchCurrentUser = createAsyncThunk(
   }
 );
 
+export const logoutUser = createAsyncThunk(
+  'auth/logoutUser',
+  async (_, thunkAPI) => {
+    try {
+      const response = await api.post('/auth/logout');
+      
+      return response.data;
+    }
+    catch (error) {
+      return thunkAPI.rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
+
 const initialState = {
   user: null,
   status: 'idle',
@@ -90,6 +104,17 @@ const authSlice = createSlice({
         state.user = action.payload;
       })
       .addCase(fetchCurrentUser.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload
+          ? action.payload.message || String(action.payload)
+          : action.error.message;
+      })
+      .addCase(logoutUser.fulfilled, (state) => {
+        state.user = null;
+        state.status = 'idle';
+        state.error = null;
+      })
+      .addCase(logoutUser.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload
           ? action.payload.message || String(action.payload)
