@@ -10,10 +10,12 @@ const VendorLayout = () => {
     { to: '/vendor/sales', label: 'Sales' },
   ];
   return (
-    <div className="flex">
+    <div className="flex bg-gray-50">
       <Sidebar links={links} />
-      <div className="flex-1 p-6">
-        <Outlet />
+      <div className="flex-1 min-h-[calc(100vh-4rem)] px-6 py-6">
+        <div className="max-w-6xl mx-auto space-y-6">
+          <Outlet />
+        </div>
       </div>
     </div>
   );

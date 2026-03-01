@@ -39,14 +39,21 @@ const AdminDashboard = () => {
     dispatch(fetchActiveSellers({ page: sellerPage, limit: 5 }));
   }, [dispatch, sellerPage]);
 
-  if (!dashboard) return <p>Loading...</p>;
+  if (!dashboard) return <div className="py-10 text-sm text-gray-500">Loading dashboard...</div>;
 
   return (
-    <div className="container mx-auto py-6">
-      <h1 className="text-2xl font-semibold mb-6">Admin Dashboard</h1>
+    <div className="space-y-8">
+      <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
+        <div>
+          <h1 className="text-2xl font-semibold text-gray-900">Admin Dashboard</h1>
+          <p className="text-sm text-gray-600">
+            Overview of users, vendors, and platform performance.
+          </p>
+        </div>
+      </header>
 
       {/* STATS GRID */}
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-10">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <StatCard title="Total Users" value={dashboard.totalUsers} />
         <StatCard title="Total Vendors" value={dashboard.totalVendors} />
         <StatCard title="Active Users" value={dashboard.activeUsers} />
@@ -56,26 +63,30 @@ const AdminDashboard = () => {
       </div>
 
       {/* ACTIVE USERS */}
-      <ListSection
-        title="Active Users"
-        data={activeUsersList}
-        currentPage={userPage}
-        totalPages={userTotalPages}
-        onPageChange={setUserPage}
-        showBlockButton={true}
-        onBlock={(id) => dispatch(blockUser(id))}
-      />
+      <div className="card p-4">
+        <ListSection
+          title="Active Users"
+          data={activeUsersList}
+          currentPage={userPage}
+          totalPages={userTotalPages}
+          onPageChange={setUserPage}
+          showBlockButton={true}
+          onBlock={(id) => dispatch(blockUser(id))}
+        />
+      </div>
 
       {/* ACTIVE SELLERS */}
-      <ListSection
-        title="Active Sellers"
-        data={activeSellersList}
-        currentPage={sellerPage}
-        totalPages={sellerTotalPages}
-        onPageChange={setSellerPage}
-        showBlockButton={true}
-        onBlock={(id) => dispatch(blockUser(id))}
-      />
+      <div className="card p-4">
+        <ListSection
+          title="Active Sellers"
+          data={activeSellersList}
+          currentPage={sellerPage}
+          totalPages={sellerTotalPages}
+          onPageChange={setSellerPage}
+          showBlockButton={true}
+          onBlock={(id) => dispatch(blockUser(id))}
+        />
+      </div>
     </div>
   );
 };

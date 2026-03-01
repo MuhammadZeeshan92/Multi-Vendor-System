@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, Link } from 'react-router-dom';
 import { loginUser } from '../../features/auth/authSlice';
-import { useNavigate } from 'react-router-dom';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 
@@ -26,35 +26,48 @@ const Login = () => {
     if (user) {
       if (user.role === 'seller') navigate('/vendor/dashboard');
       else if (user.role === 'admin') navigate('/admin/dashboard');
-      else navigate('/');
+      else if (user.role === 'buyer') navigate('/buyer/dashboard');
     }
   }, [user, navigate]);
 
   return (
-    <div className="max-w-md mx-auto mt-10">
-      <h2 className="text-2xl font-semibold mb-4">Login</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <Input
-          label="Email"
-          name="email"
-          type="email"
-          value={form.email}
-          onChange={handleChange}
-          required
-        />
-        <Input
-          label="Password"
-          name="password"
-          type="password"
-          value={form.password}
-          onChange={handleChange}
-          required
-        />
-        {error && <div className="text-red-500">{error}</div>}
-        <Button type="submit" disabled={status === 'loading'}>
-          {status === 'loading' ? 'Logging in...' : 'Login'}
-        </Button>
-      </form>
+    <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center bg-gray-50 py-10">
+      <div className="w-full max-w-md card p-6 space-y-6">
+        <div className="space-y-1 text-center">
+          <h2 className="text-2xl font-semibold text-gray-900">Welcome back</h2>
+          <p className="text-sm text-gray-600">
+            Sign in to manage your orders, cart, or vendor dashboard.
+          </p>
+        </div>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <Input
+            label="Email"
+            name="email"
+            type="email"
+            value={form.email}
+            onChange={handleChange}
+            required
+          />
+          <Input
+            label="Password"
+            name="password"
+            type="password"
+            value={form.password}
+            onChange={handleChange}
+            required
+          />
+          {error && <div className="text-sm text-red-500">{error}</div>}
+          <Button type="submit" disabled={status === 'loading'} className="w-full">
+            {status === 'loading' ? 'Logging in...' : 'Login'}
+          </Button>
+        </form>
+        <p className="text-xs text-gray-500 text-center">
+          New here?{' '}
+          <Link to="/auth/register" className="text-indigo-600 hover:text-indigo-700 font-medium">
+            Create an account
+          </Link>
+        </p>
+      </div>
     </div>
   );
 };

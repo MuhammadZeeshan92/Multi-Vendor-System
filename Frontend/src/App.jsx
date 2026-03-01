@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { fetchCurrentUser } from './features/auth/authSlice';
+import { Helmet } from 'react-helmet';
 
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -11,7 +12,7 @@ import RoleRoute from './routes/RoleRoute';
 // pages
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
-import Home from './pages/Home';
+import Home from './pages/Home'; // landing / marketing page
 import ProductList from './pages/products/ProductList';
 import ProductDetail from './pages/products/ProductDetail';
 import CartPage from './pages/cart/CartPage';
@@ -30,6 +31,8 @@ import AdminVendors from './pages/admin/AdminVendor';
 import Commission from './pages/admin/Commission';
 import Forbidden from './pages/misc/Forbidden';
 import NotFound from './pages/misc/NotFound';
+import VendorStorefront from './pages/vendors/VendorStorefront';
+import VendorList from './pages/vendors/VendorList';
 
 function App() {
   const dispatch = useDispatch();
@@ -42,28 +45,42 @@ function App() {
   return (
     <Router>
       <div className="flex flex-col min-h-screen">
+        <Helmet>
+          <title>Marketplace</title>
+          <meta
+            name="description"
+            content="Multi‑vendor marketplace where you can discover products from independent sellers with secure checkout."
+          />
+        </Helmet>
         <Navbar />
         <main className="flex-1">
           <Routes>
+            {/* Landing = Marketing + Discovery (Hero + Featured + Vendors + CTAs) */}
             <Route path="/" element={<Home />} />
+
+            {/* Full product listing with filters & pagination */}
             <Route path="/products" element={<ProductList />} />
             <Route path="/products/:id" element={<ProductDetail />} />
 
+            {/* Vendor discovery & storefront */}
+            <Route path="/vendors" element={<VendorList />} />
+            <Route path="/vendors/:id" element={<VendorStorefront />} />
+
+            {/* auth */}
             <Route path="/auth">
               <Route path="login" element={<Login />} />
               <Route path="register" element={<Register />} />
             </Route>
 
-            <Route element={<ProtectedRoute />}>            
+            {/* protected routes (unchanged business logic) */}
+            <Route element={<ProtectedRoute />}>
               <Route path="/cart" element={<CartPage />} />
               <Route path="/checkout" element={<Checkout />} />
               <Route path="/order-success" element={<OrderSuccess />} />
               <Route path="/my-orders" element={<MyOrders />} />
 
-              <Route element={<RoleRoute allowedRoles={[ 'seller' ]} />}>
-                <Route
-                  element={<VendorLayout />}
-                >
+              <Route element={<RoleRoute allowedRoles={['seller']} />}>
+                <Route element={<VendorLayout />}>
                   <Route path="/vendor/dashboard" element={<VendorDashboard />} />
                   <Route path="/vendor/products" element={<VendorProducts />} />
                   <Route path="/vendor/products/add" element={<AddProduct />} />
@@ -71,10 +88,8 @@ function App() {
                 </Route>
               </Route>
 
-              <Route element={<RoleRoute allowedRoles={[ 'admin' ]} />}>
-                <Route
-                  element={<AdminLayout />}
-                >
+              <Route element={<RoleRoute allowedRoles={['admin']} />}>
+                <Route element={<AdminLayout />}>
                   <Route path="/admin/dashboard" element={<AdminDashboard />} />
                   <Route path="/admin/users" element={<AdminUsers />} />
                   <Route path="/admin/commission" element={<Commission />} />

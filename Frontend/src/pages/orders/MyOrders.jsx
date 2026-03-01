@@ -14,17 +14,25 @@ const MyOrders = () => {
   if (status === 'loading') return <Spinner />;
 
   if (myOrders.length === 0)
-    return <div className="container mx-auto py-6">You have no orders.</div>;
+    return (
+      <div className="container py-6 text-sm text-gray-600">
+        You have no orders.
+      </div>
+    );
 
   return (
-    <div className="container mx-auto py-6">
-      <h1 className="text-2xl font-semibold mb-4">My Orders</h1>
-      <ul className="space-y-4">
+    <div className="container py-6 space-y-4">
+      <h1 className="text-2xl font-semibold text-gray-900">My Orders</h1>
+      <ul className="space-y-3">
         {myOrders.map((o) => (
-          <li key={o._id} className="border p-4 rounded-lg">
-            <p>Order ID: {o._id}</p>
-            <p>Status: {o.status}</p>
-            {/* more details */}
+          <li key={o._id} className="card p-4 text-sm text-gray-700">
+            <div className="flex items-center justify-between mb-2">
+              <p className="font-semibold text-gray-900">Order #{o._id}</p>
+              <span className="px-2 py-1 rounded-full text-xs bg-gray-100 text-gray-700">
+                {o.status}
+              </span>
+            </div>
+            {/* more details can be displayed here */}
           </li>
         ))}
       </ul>

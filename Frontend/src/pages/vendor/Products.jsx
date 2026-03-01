@@ -42,34 +42,64 @@ const VendorProducts = () => {
   };
 
   return (
-    <div className="container mx-auto py-6">
-      <div className="flex items-center justify-between mb-4">
-        <h1 className="text-2xl font-semibold">My Products</h1>
-        <Link to="/vendor/add" className="btn btn-primary">Add Product</Link>
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-semibold text-gray-900">My Products</h1>
+          <p className="text-sm text-gray-600">
+            Manage the products available on your storefront.
+          </p>
+        </div>
+        <Link
+          to="/vendor/add"
+          className="bg-indigo-600 text-white rounded-lg px-4 py-2 text-sm font-medium hover:bg-indigo-700"
+        >
+          Add Product
+        </Link>
       </div>
 
-      {loading && <div>Loading products...</div>}
-      {error && <div className="text-red-600">{error}</div>}
+      {loading && <div className="text-sm text-gray-500">Loading products...</div>}
+      {error && <div className="text-sm text-red-600">{error}</div>}
 
       {!loading && !error && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {products.length === 0 && <div>No products yet.</div>}
+          {products.length === 0 && (
+            <div className="text-sm text-gray-500">No products yet.</div>
+          )}
           {products.map((product) => (
-            <div key={product._id} className="border rounded p-3">
-              <div className="h-40 flex items-center justify-center bg-gray-100 mb-3">
+            <div key={product._id} className="card p-3 flex flex-col gap-2">
+              <div className="h-40 flex items-center justify-center bg-gray-50 rounded-lg overflow-hidden">
                 {product.images && product.images[0] ? (
-                  <img src={product.images[0]} alt={product.name} className="max-h-40 object-contain" />
+                  <img
+                    src={product.images[0]}
+                    alt={product.name}
+                    className="max-h-40 object-contain"
+                  />
                 ) : (
-                  <div className="text-gray-500">No image</div>
+                  <div className="text-gray-400 text-sm">No image</div>
                 )}
               </div>
-              <h2 className="font-semibold text-lg">{product.name}</h2>
-              <p className="text-sm text-gray-600">{product.description?.slice(0, 120)}</p>
-              <div className="mt-2 flex items-center justify-between">
-                <div className="font-bold">${product.price}</div>
-                <div className="flex gap-2">
-                  <Link to={`/vendor/products/${product._id}/edit`} className="text-blue-600">Edit</Link>
-                  <button onClick={() => handleDelete(product._id)} className="text-red-600">Delete</button>
+              <h2 className="font-semibold text-sm text-gray-900 line-clamp-2">
+                {product.name}
+              </h2>
+              <p className="text-xs text-gray-600 line-clamp-2">
+                {product.description?.slice(0, 120)}
+              </p>
+              <div className="mt-1 flex items-center justify-between text-sm">
+                <div className="font-semibold text-gray-900">${product.price}</div>
+                <div className="flex gap-3">
+                  <Link
+                    to={`/vendor/products/${product._id}/edit`}
+                    className="text-indigo-600 hover:text-indigo-700"
+                  >
+                    Edit
+                  </Link>
+                  <button
+                    onClick={() => handleDelete(product._id)}
+                    className="text-red-600 hover:text-red-700"
+                  >
+                    Delete
+                  </button>
                 </div>
               </div>
             </div>

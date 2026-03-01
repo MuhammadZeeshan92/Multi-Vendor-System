@@ -148,9 +148,14 @@ const AddProduct = () => {
   };
 
   return (
-    <div className="container mx-auto py-6 max-w-lg">
-      <h1 className="text-2xl font-semibold mb-4">Add Product</h1>
-      <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="max-w-2xl space-y-6">
+      <header>
+        <h1 className="text-2xl font-semibold text-gray-900">Add Product</h1>
+        <p className="text-sm text-gray-600">
+          Create a new product for your storefront. Images are uploaded via Cloudinary.
+        </p>
+      </header>
+      <form onSubmit={handleSubmit} className="card p-5 space-y-4">
         <Input
           label="Name"
           name="name"
@@ -158,13 +163,13 @@ const AddProduct = () => {
           onChange={handleChange}
           required
         />
-        <div>
-          <label className="text-gray-700">Description</label>
+        <div className="flex flex-col gap-1 text-sm">
+          <label className="text-sm font-medium text-gray-700">Description</label>
           <textarea
             name="description"
             value={form.description}
             onChange={handleChange}
-            className="w-full border border-gray-300 rounded-md px-3 py-2"
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
             required
           />
         </div>
@@ -191,15 +196,15 @@ const AddProduct = () => {
           onChange={handleChange}
           required
         />
-        <div>
-          <label className="text-gray-700">Images</label>
+        <div className="space-y-2 text-sm">
+          <label className="text-sm font-medium text-gray-700">Images</label>
           <input
             type="file"
             multiple
             onChange={handleImageUpload}
-            className="block w-full"
+            className="block w-full text-xs text-gray-600"
           />
-          {uploading && <p>Uploading...</p>}
+          {uploading && <p className="text-xs text-gray-500">Uploading...</p>}
           {imageFiles.length > 0 ? (
             <div className="flex flex-col gap-2 mt-2">
               <div className="flex gap-2">
@@ -228,7 +233,9 @@ const AddProduct = () => {
             </div>
           ) : null}
         </div>
-        <Button type="submit">Submit</Button>
+        <Button type="submit" className="w-full">
+          Submit
+        </Button>
       </form>
     </div>
   );

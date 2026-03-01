@@ -49,13 +49,31 @@ Key directories under `src/`:
 src/
  ├── app/            # Redux store
  ├── features/       # Redux slices
- ├── components/     # Reusable UI
- ├── pages/          # Route views
+ ├── components/     # Reusable UI (Hero, ProductCard, Vendor* components, filters)
+ ├── pages/          # Route views (landing, products, vendors, cart, checkout, dashboards)
  ├── routes/         # Protected/role route helpers
  ├── hooks/          # Custom hooks (toast)
  ├── utils/          # API and constants
  └── layouts/        # Vendor/admin layouts
 ```
+
+### Key Routes
+
+- `/` – Marketing landing page with hero, top‑rated products, featured vendors, and CTAs
+- `/products` – Full product listing with search, filters, vendor chips, and pagination
+- `/products/:id` – Product detail with gallery, vendor profile snippet, and “More from this seller”
+- `/vendors` – Featured vendor directory
+- `/vendors/:id` – Public vendor storefront with vendor profile and product grid
+- `/cart` – Multi‑vendor cart view grouped by vendor
+- `/checkout` – Checkout with grouped cart summary and Stripe session redirect
+
+### Design System
+
+- **Palette**: Indigo (primary), Emerald (success), Amber (accent/low‑stock), Red (danger), gray backgrounds
+- **Typography**: Inter font, `font-semibold` headings, `text-gray-700` body copy
+- **Layout**: `container max-w-7xl mx-auto px-4 md:px-6`, card components use `rounded-xl border border-gray-100 shadow-sm`
+- **Buttons**: Primary actions use `bg-indigo-600 text-white hover:bg-indigo-700 rounded-lg px-5 py-2 font-medium`
+- **Badges**: Stock states—emerald (in stock), amber (low stock), red (out of stock)
 
 ## Tailwind CSS
 

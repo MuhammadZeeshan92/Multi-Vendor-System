@@ -103,3 +103,20 @@ exports.deleteProduct = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+exports.getTopRatedProducts = async (req, res) => {
+  try {
+    const limit = parseInt(req.query.limit) || 0;
+
+    const products = await Product.find({})
+      .sort({ createdAt: -1 }) // newest first (temporary logic)
+      .limit(limit);
+
+      console.log('Products:', products.length);
+
+    res.json(products);
+  } catch (error) {
+    console.error('Error fetching products:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};

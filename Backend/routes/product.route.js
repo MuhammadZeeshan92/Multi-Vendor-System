@@ -5,6 +5,7 @@ const {
   getVendorProducts,
   updateProduct,
   deleteProduct,
+  getTopRatedProducts,
 } = require("../controllers/product.controller");
 
 const {
@@ -19,13 +20,13 @@ const {
 } = require("../middleware/auth.middleware");
 
 router.get("/", getAllProducts);
-router.get('/:id', getProductById);
-
+router.post("/",protect,authorizeRoles("seller"),createProduct);
 // Vendor Dashboard Products
 router.get("/vendor",protect,authorizeRoles("seller"),getVendorProducts);
+router.get('/top-rated',getTopRatedProducts);
+router.get('/:id', getProductById);
 
 // Vendor Create
-router.post("/",protect,authorizeRoles("seller"),createProduct);
 
 // Vendor Update
 router.put("/:id",protect,authorizeRoles("seller"),updateProduct);
