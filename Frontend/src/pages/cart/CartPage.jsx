@@ -3,10 +3,13 @@ import { useSelector, useDispatch } from 'react-redux';
 import { updateQty, removeItem } from '../../features/cart/cartSlice';
 import Button from '../../components/Button';
 import GroupedCartSummary from '../../components/GroupedCartSummary';
+import { useNavigate } from 'react-router-dom';
 
 const CartPage = () => {
   const dispatch = useDispatch();
   const { items, subtotal } = useSelector((state) => state.cart);
+  const navigate = useNavigate()
+  const { user } = useSelector((state) => state.auth)
 
   const handleQtyChange = (productId, qty, stock) => {
     const newQty = Math.min(stock, Math.max(1, qty));
@@ -74,7 +77,15 @@ const CartPage = () => {
         <p className="text-xl font-bold text-gray-900">
           Subtotal: ${subtotal.toFixed(2)}
         </p>
-        <Button onClick={() => (window.location.href = '/checkout')}>
+        <Button onClick={() => {
+          if (!user) {
+            navigate('/auth/login', {
+              state: { from: '/checkout' }
+            })
+          } else {
+            navigate('/checkout')
+          }
+        }}>
           Proceed to checkout
         </Button>
       </div>

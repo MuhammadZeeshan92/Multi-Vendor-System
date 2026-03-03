@@ -3,12 +3,24 @@ import { useDispatch, useSelector } from 'react-redux';
 import { createOrder } from '../../features/orders/orderSlice';
 import Button from '../../components/Button';
 import GroupedCartSummary from '../../components/GroupedCartSummary';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Checkout = () => {
   const dispatch = useDispatch();
   const { items, subtotal } = useSelector((state) => state.cart);
   const [shipping, setShipping] = useState({ address: '', city: '', postalCode: '' });
   const [status, setStatus] = useState('idle');
+  const { user } = useSelector((state) => state.auth)
+const navigate = useNavigate()
+
+useEffect(() => {
+  if (!user) {
+    navigate('/auth/login', {
+      state: { from: '/checkout' }
+    })
+  }
+}, [user, navigate])
 
   const handleChange = (e) => {
     setShipping({ ...shipping, [e.target.name]: e.target.value });

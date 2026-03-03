@@ -48,13 +48,13 @@ const Navbar = () => {
           <NavItem to="/">Shop</NavItem>
           <NavItem to="/products">All Products</NavItem>
           <NavItem to="/vendors">Vendors</NavItem>
+          <NavItem to="/cart">Cart</NavItem>
 
           {user ? (
             <>
               {user.role === 'seller' && <NavItem to="/vendor/dashboard">Vendor</NavItem>}
               {user.role === 'admin' && <NavItem to="/admin/dashboard">Admin</NavItem>}
               {user.role === 'buyer' && <NavItem to="/buyer/dashboard">Buyer</NavItem>}
-              <NavItem to="/cart">Cart</NavItem>
               <button onClick={handleLogout} className="px-3 py-2 text-sm font-medium rounded-full transition-colors bg-indigo-50 text-indigo-700 hover:text-gray-900 hover:bg-gray-50">Logout</button>
             </>
           ) : (

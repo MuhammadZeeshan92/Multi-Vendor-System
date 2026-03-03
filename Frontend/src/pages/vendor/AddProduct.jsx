@@ -207,11 +207,39 @@ const AddProduct = () => {
         <div className="space-y-2 text-sm">
           <label className="text-sm font-medium text-gray-700">Images</label>
           <input
+            id="imageUpload"
             type="file"
             multiple
             onChange={handleImageUpload}
-            className="block w-full text-xs text-gray-600"
+            className="hidden"
           />
+
+          <label
+            htmlFor="imageUpload"
+            className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition"
+          >
+            <div className="flex flex-col items-center justify-center pt-5 pb-6">
+              <svg
+                className="w-8 h-8 mb-2 text-gray-400"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M7 16V4m0 0L3 8m4-4l4 4m6 4v8m0 0l-4-4m4 4l4-4" />
+              </svg>
+              <p className="text-sm text-gray-500">
+                {imageFiles.length > 0
+                  ? `${imageFiles.length} image(s) selected`
+                  : (
+                    <>
+                      <span className="font-semibold text-indigo-600">Click to upload</span> or drag and drop
+                    </>
+                  )}
+              </p>
+              <p className="text-xs text-gray-400">PNG, JPG up to 5MB (Max 4 images)</p>
+            </div>
+          </label>
           {uploading && <p className="text-xs text-gray-500">Uploading...</p>}
           {imageFiles.length > 0 ? (
             <div className="flex flex-col gap-2 mt-2">

@@ -18,6 +18,7 @@ const ProductDetail = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const { current, status } = useSelector((state) => state.products);
+  const [added, setAdded] = useState(false);
 
   const [qty, setQty] = useState(1);
   const [activeTab, setActiveTab] = useState('description');
@@ -59,11 +60,12 @@ const ProductDetail = () => {
   const stockLabel = !inStock
     ? 'Out of stock'
     : lowStock
-    ? `Only ${current.stock} left`
-    : 'In stock';
+      ? `Only ${current.stock} left`
+      : 'In stock';
 
   const handleAddToCart = () => {
     if (!inStock) return;
+
     dispatch(
       addItem({
         productId: current._id,
@@ -77,13 +79,19 @@ const ProductDetail = () => {
         stock: current.stock,
       })
     );
+
+    setAdded(true);
+
+    setTimeout(() => {
+      setAdded(false);
+    }, 1500);
   };
 
   const vendor = current.vendor
     ? current.vendor
     : current.vendorId
-    ? { _id: current.vendorId, name: 'Vendor' }
-    : null;
+      ? { _id: current.vendorId, name: 'Vendor' }
+      : null;
 
   const pageTitle = current.name ? `${current.name} — Marketplace` : 'Product — Marketplace';
   const ogImage = current.images?.[0];
@@ -117,11 +125,10 @@ const ProductDetail = () => {
                   key={img + idx}
                   type="button"
                   onClick={() => setSelectedImage(idx)}
-                  className={`h-16 w-20 rounded-md overflow-hidden border ${
-                    idx === selectedImage
-                      ? 'border-indigo-600 ring-2 ring-indigo-100'
-                      : 'border-gray-200'
-                  }`}
+                  className={`h-16 w-20 rounded-md overflow-hidden border ${idx === selectedImage
+                    ? 'border-indigo-600 ring-2 ring-indigo-100'
+                    : 'border-gray-200'
+                    }`}
                 >
                   <img
                     src={img}
@@ -177,8 +184,26 @@ const ProductDetail = () => {
                 />
               </div>
 
-              <Button onClick={handleAddToCart} disabled={!inStock}>
-                {inStock ? 'Add to cart' : 'Out of stock'}
+              <Button
+                onClick={handleAddToCart}
+                disabled={!inStock}
+                className={`w-full
+    h-12
+    rounded-xl
+    text-base
+    font-semibold
+    transition-all
+    duration-200
+    shadow-sm
+    hover:shadow-md
+    active:scale-[0.98]
+  ${added ? 'bg-green-600 hover:bg-green-600' : ''}`}
+              >
+                {!inStock
+                  ? 'Out of stock'
+                  : added
+                    ? '✓ Added'
+                    : 'Add to cart'}
               </Button>
             </div>
           </div>
@@ -195,17 +220,16 @@ const ProductDetail = () => {
               key={tab}
               type="button"
               onClick={() => setActiveTab(tab)}
-              className={`pb-2 px-1 border-b-2 -mb-px font-medium ${
-                activeTab === tab
-                  ? 'border-indigo-600 text-indigo-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700'
-              }`}
+              className={`pb-2 px-1 border-b-2 -mb-px font-medium ${activeTab === tab
+                ? 'border-indigo-600 text-indigo-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700'
+                }`}
             >
               {tab === 'description'
                 ? 'Description'
                 : tab === 'specs'
-                ? 'Specifications'
-                : 'Reviews'}
+                  ? 'Specifications'
+                  : 'Reviews'}
             </button>
           ))}
         </div>

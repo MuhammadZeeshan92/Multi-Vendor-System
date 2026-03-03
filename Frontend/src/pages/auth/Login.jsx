@@ -4,11 +4,14 @@ import { useNavigate, Link } from 'react-router-dom';
 import { loginUser } from '../../features/auth/authSlice';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
+import { useLocation } from 'react-router-dom'
+
 
 const Login = () => {
   const dispatch = useDispatch();
   const { user, status, error } = useSelector((state) => state.auth);
   const [form, setForm] = useState({ email: '', password: '' });
+  const location = useLocation()
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -23,12 +26,20 @@ const Login = () => {
 
   // redirect user immediately after login based on their role
   useEffect(() => {
-    if (user) {
-      if (user.role === 'seller') navigate('/vendor/dashboard');
-      else if (user.role === 'admin') navigate('/admin/dashboard');
-      else if (user.role === 'buyer') navigate('/buyer/dashboard');
+  if (user) {
+    const from = location.state?.from
+
+    if (from) {
+      navigate(from)
+      return
     }
-  }, [user, navigate]);
+
+    if (user.role === 'seller') navigate('/vendor/dashboard')
+    else if (user.role === 'admin') navigate('/admin/dashboard')
+    else if (user.role==='buyer')navigate('/buyer/dashboard')
+    else navigate('/')
+  }
+}, [user, navigate, location])
 
   return (
     <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center bg-gray-50 py-10">

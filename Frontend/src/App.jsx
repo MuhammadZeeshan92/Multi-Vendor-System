@@ -89,8 +89,8 @@ function App() {
             </Route>
 
             {/* protected routes (unchanged business logic) */}
-            <Route element={<ProtectedRoute />}>
               <Route path="/cart" element={<CartPage />} />
+            <Route element={<ProtectedRoute />}>
               <Route path="/checkout" element={<Checkout />} />
               <Route path="/order-success" element={<OrderSuccess />} />
               <Route path="/my-orders" element={<MyOrders />} />
