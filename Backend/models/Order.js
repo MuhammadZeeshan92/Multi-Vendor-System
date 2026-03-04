@@ -1,3 +1,4 @@
+// models/Order.js
 const mongoose = require("mongoose");
 
 const orderItemSchema = new mongoose.Schema({
@@ -6,7 +7,6 @@ const orderItemSchema = new mongoose.Schema({
     ref: "Product",
     required: true,
   },
-
   name: String,
   price: Number,
   quantity: Number,
@@ -31,6 +31,12 @@ const orderSchema = new mongoose.Schema(
       required: true,
     },
 
+    shipping: {
+      address: String,
+      city: String,
+      postalCode: String,
+    },
+
     status: {
       type: String,
       enum: ["Pending", "Paid", "Shipped", "Delivered"],
@@ -43,6 +49,10 @@ const orderSchema = new mongoose.Schema(
     },
 
     paidAt: Date,
+
+    // Stripe-related
+    stripeSessionId: String,
+    paymentResult: { type: Object },
   },
   { timestamps: true }
 );

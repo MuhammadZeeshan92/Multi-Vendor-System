@@ -22,14 +22,14 @@ const GroupedCartSummary = ({ items }) => {
 
   return (
     <div className="space-y-4">
-      {groups.map((group) => {
+      {groups.map((group,index) => {
         const { vendor, items: vendorItems, subtotal } = group;
         const platformFee = subtotal * 0.1;
         const vendorPayout = subtotal - platformFee;
 
         return (
           <section
-            key={vendor._id || vendor.name}
+            key={group.vendor._id || `vendor-${index}`}
             className="card p-4 space-y-3"
           >
             <div className="flex items-center justify-between">
@@ -66,7 +66,7 @@ const GroupedCartSummary = ({ items }) => {
             <div className="divide-y divide-gray-100">
               {vendorItems.map((item) => (
                 <div
-                  key={item.productId}
+                  key={`${item.productId}-${item.vendorId}`}
                   className="py-2 flex items-center justify-between text-sm"
                 >
                   <div className="flex items-center gap-3">

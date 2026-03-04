@@ -9,6 +9,7 @@ const orderRoutes = require("./routes/order.route.js");
 const adminRoutes = require("./routes/admin.routes.js");
 const cloudinaryRoutes = require("./routes/cloudinary.route.js");
 const vendorRoutes = require('./routes/vendor.routes');     
+const webhookRouter = require('./routes/webhook');
 
 
 
@@ -27,8 +28,14 @@ app.use(cors(
         credentials: true,
     }
 ));
-app.use(express.json());
 app.use(cookieParser());
+
+
+
+app.use('/api', webhookRouter); // the webhook uses raw parser internally
+
+
+app.use(express.json());
 
 app.use(
     cors({

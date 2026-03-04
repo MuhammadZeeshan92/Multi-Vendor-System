@@ -14,6 +14,8 @@ const VendorSales = () => {
 
   if (status === 'loading') return <Spinner />;
 
+  console.log("Vendor sales data:", vendorSales);
+
   return (
     <div className="container py-6 space-y-4">
       <h1 className="text-2xl font-semibold text-gray-900">My Sales</h1>
