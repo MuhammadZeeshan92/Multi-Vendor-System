@@ -40,6 +40,7 @@ import FollowedVendors from './pages/buyers/FollowedVendors';
 // import Wishlist from './pages/buyer/Wishlist';
 // import BuyerReviews from './pages/buyer/Reviews';
 import BuyerSettings from './pages/buyers/Settings';
+import CreateStore from './pages/vendor/CreateStore';
 
 function App() {
   const dispatch = useDispatch();
@@ -87,9 +88,13 @@ function App() {
               <Route path="login" element={<Login />} />
               <Route path="register" element={<Register />} />
             </Route>
+            <Route
+              path="/vendor/create-store"
+              element={<CreateStore />}
+            />
 
             {/* protected routes (unchanged business logic) */}
-              <Route path="/cart" element={<CartPage />} />
+            <Route path="/cart" element={<CartPage />} />
             <Route element={<ProtectedRoute />}>
               <Route path="/checkout" element={<Checkout />} />
               <Route path="/order-success" element={<OrderSuccess />} />

@@ -28,7 +28,7 @@ const Navbar = () => {
     e.preventDefault();
     dispatch(logoutUser());
     toast.info('Logged out successfully');
-    navigate('/auth/login');
+    navigate('/auth/login',{ replace: true, state: {} });
   };
 
   return (

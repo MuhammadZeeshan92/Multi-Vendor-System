@@ -45,7 +45,7 @@ const FollowedVendors = () => {
         <div style={{ display: 'flex', gap: 4 }}>
           {categories.map(c => (
             <button key={c} onClick={() => setCat(c)} style={{
-              padding: '7px 14px', borderRadius: 8, border: 'none', cursor: 'pointer', fontSize: '0.78rem', fontWeight: 500,
+              padding: '7px 14px', borderRadius: 8, cursor: 'pointer', fontSize: '0.78rem', fontWeight: 500,
               background: cat === c ? '#6d4aff' : '#fff',
               color: cat === c ? '#fff' : '#6b7280',
               border: cat === c ? 'none' : '1px solid #e5e7eb',

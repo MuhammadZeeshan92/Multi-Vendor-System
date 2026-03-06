@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const Vendor = require("../models/Vendor");
 
 // Register
 exports.registerUser = async (req, res) => {
@@ -60,6 +61,12 @@ exports.loginUser = async (req, res) => {
             return res.status(400).json({ message: "Invalid credentials" });
         }
 
+        let hasVendor = false;
+        if (user.role === "seller") {
+            const vendor = await Vendor.findOne({ user: user._id });
+            hasVendor = !!vendor;
+        }
+
         const token = jwt.sign(
             { id: user._id, role: user.role },
             process.env.JWT_SECRET,
@@ -76,6 +83,12 @@ exports.loginUser = async (req, res) => {
         res.status(200).json({
             message: "Login successful",
             role: user.role,
+            hasVendor,
+            user: {
+                _id: user._id,
+                name: user.name,
+                email: user.email,
+            }
         });
 
     } catch (error) {

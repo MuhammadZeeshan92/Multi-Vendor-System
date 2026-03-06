@@ -26,20 +26,27 @@ const Login = () => {
 
   // redirect user immediately after login based on their role
   useEffect(() => {
-  if (user) {
-    const from = location.state?.from
+    if (!user) return;
 
-    if (from) {
-      navigate(from)
-      return
+    // SELLER without store -> force create store
+    if (user.role === 'seller' && !user.hasVendor) {
+      navigate('/vendor/create-store', { replace: true });
+      return;
     }
 
-    if (user.role === 'seller') navigate('/vendor/dashboard')
-    else if (user.role === 'admin') navigate('/admin/dashboard')
-    else if (user.role==='buyer')navigate('/buyer/dashboard')
-    else navigate('/')
-  }
-}, [user, navigate, location])
+    // Redirect to previous protected page if exists
+    const from = location.state?.from;
+    if (from) {
+      navigate(from, { replace: true });
+      return;
+    }
+
+    // Role-based dashboard redirects
+    if (user.role === 'seller') navigate('/vendor/dashboard', { replace: true });
+    else if (user.role === 'admin') navigate('/admin/dashboard', { replace: true });
+    else if (user.role === 'buyer') navigate('/buyer/dashboard', { replace: true });
+    else navigate('/', { replace: true });
+  }, [user, navigate, location]);
 
   return (
     <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center bg-gray-50 py-10">
