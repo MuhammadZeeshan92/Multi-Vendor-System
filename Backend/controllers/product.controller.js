@@ -1,9 +1,19 @@
 const Product = require("../models/Product");
+const Vendor = require("../models/Vendor");
+const mongoose = require("mongoose");
 
 // Create Product (Vendor only)
 exports.createProduct = async (req, res) => {
   try {
     const { name, description, price, stock, images } = req.body;
+
+    const vendor = await Vendor.findOne({ user: req.user._id });
+    if (!vendor) {
+      return res.status(403).json({ message: "Only vendors can create products" });
+    }
+
+    vendor.totalProducts = (vendor.totalProducts || 0) + 1;
+    await vendor.save();
 
     const product = await Product.create({
       name,
@@ -95,6 +105,15 @@ exports.deleteProduct = async (req, res) => {
     if (product.vendor.toString() !== req.user._id.toString()) {
       return res.status(403).json({ message: "Not authorized" });
     }
+
+    const vendor = await Vendor.findOne({ user: req.user._id });
+    if (vendor) {
+      vendor.totalProducts = Math.max((vendor.totalProducts || 1) - 1, 0);
+      await vendor.save();
+    }
+
+    vendor.totalProducts = Math.max((vendor.totalProducts || 1) - 1, 0);
+    await vendor.save();
 
     await product.deleteOne();
 

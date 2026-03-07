@@ -44,7 +44,11 @@ exports.getVendorProfile = async (req, res) => {
 // GET /api/vendors
 exports.getAllVendorsProfile = async (req, res) => {
   try {
-    const vendors = await User.find({ role: 'seller', isActive: true, isBlocked: false }).select('-password');
+    const vendors = await Vendor.find().populate({
+    path: 'user',
+    match: { role: 'seller', isActive: true, isBlocked: false },
+    select: '-password'
+  });
     res.json(vendors);
   } catch (error) {
     console.error('All vendors profile error:', error);

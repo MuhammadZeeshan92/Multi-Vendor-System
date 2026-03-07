@@ -1,12 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import api from '../../utils/api';
 import { Link } from 'react-router-dom';
+import EditProductModal from '../../components/EditProductModal';
 
 const VendorProducts = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState({});
+  const [editingProduct, setEditingProduct] = useState(null);
+
+  // update handler from modal
+  const onProductUpdated = updated => {
+    setProducts(p => p.map(x => x._id === updated._id ? updated : x));
+  };
 
   useEffect(() => {
     let mounted = true;
@@ -129,12 +136,12 @@ const VendorProducts = () => {
               <div className="mt-1 flex items-center justify-between text-sm">
                 <div className="font-semibold text-gray-900">${product.price}</div>
                 <div className="flex gap-3">
-                  <Link
-                    to={`/vendor/products/${product._id}/edit`}
+                  <button
+                    onClick={() => setEditingProduct(product)}
                     className="text-indigo-600 hover:text-indigo-700"
                   >
                     Edit
-                  </Link>
+                  </button>
                   <button
                     onClick={() => handleDelete(product._id)}
                     className="text-red-600 hover:text-red-700"
@@ -146,6 +153,13 @@ const VendorProducts = () => {
             </div>
           ))}
         </div>
+      )}
+      {editingProduct && (
+        <EditProductModal
+          product={editingProduct}
+          onClose={() => setEditingProduct(null)}
+          onSaved={onProductUpdated}
+        />
       )}
     </div>
   );

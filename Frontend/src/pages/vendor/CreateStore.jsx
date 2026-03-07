@@ -76,7 +76,7 @@ const CreateStore = () => {
         description: form.description,
         logo: uploadedLogo?.secure_url || null,
         banner: uploadedBanner?.secure_url || null,
-        user: user._id,
+        user: user.user._id,
       };
 
       await api.post("/vendors/create", payload);

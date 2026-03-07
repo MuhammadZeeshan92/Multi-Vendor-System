@@ -81,4 +81,3 @@ const VendorProfileCard = ({ vendor }) => {
 };
 
 export default VendorProfileCard;
-

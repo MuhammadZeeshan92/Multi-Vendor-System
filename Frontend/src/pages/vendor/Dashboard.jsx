@@ -20,9 +20,7 @@ const VendorDashboard = () => {
     return <div className="p-10">Loading vendor...</div>;
   }
   const isOwner = authUser && vendor?.user && String(authUser) === String(vendor.user);
-  console.log("isOwner:", isOwner);
-  console.log("authUser:", authUser?._id);
-  console.log("vendor", vendor);
+
   const handleFileChange = async (e, type) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -136,19 +134,19 @@ const VendorDashboard = () => {
               <p className="text-xs font-semibold text-gray-500 uppercase mb-1">
                 Revenue (placeholder)
               </p>
-              <p className="text-2xl font-semibold text-gray-900">$0.00</p>
+              <p className="text-2xl font-semibold text-gray-900">$ {vendor.totalRevenue?.toFixed(2) || '0.00'}</p>
             </div>
             <div className="card p-4">
               <p className="text-xs font-semibold text-gray-500 uppercase mb-1">
                 Orders (placeholder)
               </p>
-              <p className="text-2xl font-semibold text-gray-900">0</p>
+              <p className="text-2xl font-semibold text-gray-900">{vendor.totalOrders || '0'}</p>
             </div>
             <div className="card p-4">
               <p className="text-xs font-semibold text-gray-500 uppercase mb-1">
                 Products (placeholder)
               </p>
-              <p className="text-2xl font-semibold text-gray-900">0</p>
+              <p className="text-2xl font-semibold text-gray-900">{vendor.totalProducts || '0'}</p>
             </div>
           </div>
 

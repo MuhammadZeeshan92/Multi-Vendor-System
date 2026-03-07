@@ -8,7 +8,7 @@ import Spinner from '../../components/Spinner';
 const VendorList = () => {
   const dispatch = useDispatch();
   const { list, status } = useSelector((state) => state.vendors);
-
+  console.log(list)
   useEffect(() => {
     dispatch(fetchPublicVendors({ featured: true, limit: 24 }));
   }, [dispatch]);
@@ -45,26 +45,26 @@ const VendorList = () => {
           console.log(vendor),
           <Link
             key={vendor._id}
-            to={`/vendors/${vendor._id}`}
+            to={`/vendors/${vendor.user._id}`}
             className="card p-4 flex items-center gap-4 hover:no-underline"
           >
             <div className="h-12 w-12 rounded-full bg-indigo-50 flex items-center justify-center overflow-hidden">
               {vendor.logo ? (
                 <img
                   src={vendor.logo}
-                  alt={vendor.name}
+                  alt={vendor.user.name}
                   className="h-full w-full object-cover"
                 />
               ) : (
                 <span className="text-indigo-600 font-semibold text-lg">
-                  {vendor.name?.[0] || 'V'}
+                  {vendor.user.name?.[0] || 'V'}
                 </span>
               )}
             </div>
             <div className="flex-1">
-              <p className="font-medium text-gray-900">{vendor.name}</p>
+              <p className="font-medium text-gray-900">{vendor.user.name}</p>
               {typeof vendor.rating === 'number' && (
-                <p className="text-sm text-gray-500">Rating {vendor.rating.toFixed(1)} / 5</p>
+                <p className="text-sm text-gray-500">Rating {vendor.totalReviews.toFixed(1)}</p>
               )}
             </div>
           </Link>

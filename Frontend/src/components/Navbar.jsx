@@ -24,9 +24,9 @@ const Navbar = () => {
   const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const handleLogout = (e) => {
+  const handleLogout = async (e) => {
     e.preventDefault();
-    dispatch(logoutUser());
+    await dispatch(logoutUser()).unwrap();
     toast.info('Logged out successfully');
     navigate('/auth/login',{ replace: true, state: {} });
   };

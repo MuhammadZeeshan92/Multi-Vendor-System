@@ -7,6 +7,7 @@ export const registerUser = createAsyncThunk(
   async (userData, thunkAPI) => {
     try {
       const response = await api.post('/auth/register', userData);
+      console.log("register response:", response.data);
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data || error.message);
@@ -73,7 +74,6 @@ const authSlice = createSlice({
       })
       .addCase(registerUser.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.user = action.payload;
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.status = 'failed';
