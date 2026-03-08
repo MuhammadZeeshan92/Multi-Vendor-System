@@ -1,34 +1,84 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { fetchBuyerData } from '../../features/buyers/buyerSlice';
+import api from '../../utils/api';
 
-const stats = [
-  { label: 'Total Orders',    value: '24',    sub: '3 in progress',      icon: '🛍️', color: '#6d4aff' },
-  { label: 'Total Spent',     value: '$1,284', sub: 'Lifetime purchases', icon: '💳', color: '#0ea5e9' },
-  { label: 'Followed Vendors',value: '8',     sub: '2 new this month',   icon: '🏪', color: '#10b981' },
-  { label: 'Pending Reviews', value: '5',     sub: 'Share your feedback', icon: '⭐', color: '#f59e0b' },
-];
+const Dashboard = () => {
+  const dispatch = useDispatch();
+  const user = useSelector(state => state.auth.user);
+  const buyersStatus = useSelector(state => state.buyers.status);
+  const followedIds = useSelector(state => state.buyers.followed);
 
-const recentOrders = [
-  { id: '#ORD-1045', product: 'Handmade Ceramic Mug', vendor: 'Clay & Co.', date: 'May 28, 2025', status: 'Delivered', amount: '$34.00', img: '🫙' },
-  { id: '#ORD-1044', product: 'Organic Lavender Soap', vendor: 'Pure Roots', date: 'May 24, 2025', status: 'Shipped',   amount: '$18.50', img: '🧼' },
-  { id: '#ORD-1043', product: 'Linen Tote Bag',        vendor: 'ThreadWorks', date: 'May 19, 2025', status: 'Processing', amount: '$52.00', img: '👜' },
-];
+  const [followedVendors, setFollowedVendors] = useState([]);
+  const [vendorError, setVendorError] = useState(null);
+  // load stats/followedIds
+  useEffect(() => {
+    if (user?.role === 'buyer') {
+      dispatch(fetchBuyerData());
+    }
+  }, [user, dispatch]);
 
-const followedVendors = [
-  { name: 'Clay & Co.',   category: 'Ceramics',    rating: 4.9, avatar: '🏺' },
-  { name: 'Pure Roots',   category: 'Wellness',    rating: 4.7, avatar: '🌿' },
-  { name: 'ThreadWorks',  category: 'Textiles',    rating: 4.8, avatar: '🧵' },
-  { name: 'Pixel Prints', category: 'Art & Decor', rating: 4.6, avatar: '🖼️' },
-];
+  // fetch vendor objects whenever the id list changes
+  useEffect(() => {
+    if (!followedIds?.length) {
+      setFollowedVendors([]);
+      return;
+    }
+    (async () => {
+      try {
+        const responses = await Promise.all(
+          followedIds.map(id => api.get(`/vendors/${id}`))
+        );
+        setFollowedVendors(responses.map(r => r.data));
+      } catch (err) {
+        console.error(err);
+        setVendorError(err.response?.data?.message || err.message);
+      }
+    })();
+  }, [followedIds]);
 
-const statusStyle = {
-  Delivered:  { bg: '#dcfce7', color: '#15803d' },
-  Shipped:    { bg: '#dbeafe', color: '#1d4ed8' },
-  Processing: { bg: '#fef9c3', color: '#a16207' },
-  Cancelled:  { bg: '#fee2e2', color: '#b91c1c' },
-};
+  let totalVendors = followedIds?.length || 0;
+  const stats = [
+    {
+      label: 'Total Orders',
+      value: user.buyer.stats?.totalOrders,
+      sub: '3 in progress',
+      icon: '🛍️',
+      color: '#6d4aff'
+    },
+    {
+      label: 'Total Spent',
+      value: user.buyer.stats?.totalSpent,
+      sub: 'Lifetime purchases',
+      icon: '💳',
+      color: '#0ea5e9'
+    },
+    {
+      label: 'Followed Vendors',
+      value: totalVendors,
+      sub: '2 new this month',
+      icon: '🏪',
+      color: '#10b981'
+    }
+  ];
 
-const Dashboard = () => (
+  const recentOrders = [
+    { id: '#ORD-1045', product: 'Handmade Ceramic Mug', vendor: 'Clay & Co.', date: 'May 28, 2025', status: 'Delivered', amount: '$34.00', img: '🫙' },
+    { id: '#ORD-1044', product: 'Organic Lavender Soap', vendor: 'Pure Roots', date: 'May 24, 2025', status: 'Shipped', amount: '$18.50', img: '🧼' },
+    { id: '#ORD-1043', product: 'Linen Tote Bag', vendor: 'ThreadWorks', date: 'May 19, 2025', status: 'Processing', amount: '$52.00', img: '👜' },
+  ];
+
+  const statusStyle = {
+    Delivered:  { bg: '#dcfce7', color: '#15803d' },
+    Shipped:    { bg: '#dbeafe', color: '#1d4ed8' },
+    Processing: { bg: '#fef9c3', color: '#a16207' },
+    Cancelled:  { bg: '#fee2e2', color: '#b91c1c' },
+  };
+  
+ return (
   <div style={{ fontFamily: "'DM Sans', sans-serif" }}>
     <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&display=swap');`}</style>
 
@@ -37,7 +87,7 @@ const Dashboard = () => (
       <p style={{ fontSize: '0.78rem', color: '#9ca3af', fontWeight: 500, letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 4 }}>
         Welcome back 👋
       </p>
-      <h1 style={{ fontSize: '1.6rem', fontWeight: 600, color: '#111827', margin: 0 }}>Sarah's Dashboard</h1>
+      <h1 style={{ fontSize: '1.6rem', fontWeight: 600, color: '#111827', margin: 0 }}>{user.name}</h1>
     </div>
 
     {/* Stat cards */}
@@ -85,25 +135,28 @@ const Dashboard = () => (
 
       {/* Followed Vendors */}
       <div style={{ background: '#fff', borderRadius: 14, border: '1px solid #f0f0f5', boxShadow: '0 1px 4px rgba(0,0,0,0.04)', overflow: 'hidden' }}>
-        <div style={{ padding: '18px 22px 14px', borderBottom: '1px solid #f5f5fa', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <h2 style={{ fontSize: '0.9rem', fontWeight: 600, color: '#111827', margin: 0 }}>Followed Vendors</h2>
-          <Link to="/buyer/vendors" style={{ fontSize: '0.75rem', color: '#6d4aff', textDecoration: 'none', fontWeight: 500 }}>See all →</Link>
-        </div>
-        <div>
-          {followedVendors.map((v, i) => (
-            <div key={v.name} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '13px 22px', borderBottom: i < followedVendors.length - 1 ? '1px solid #f9f9fc' : 'none' }}>
-              <div style={{ width: 36, height: 36, borderRadius: 10, background: '#f5f3ff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.1rem', flexShrink: 0 }}>
-                {v.avatar}
+          <div style={{ padding: '18px 22px 14px', borderBottom: '1px solid #f5f3fa', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <h2 style={{ fontSize: '0.9rem', fontWeight: 600, color: '#111827', margin: 0 }}>Followed Vendors</h2>
+            <Link to="/buyer/vendors" style={{ fontSize: '0.75rem', color: '#6d4aff', textDecoration: 'none', fontWeight: 500 }}>See all →</Link>
+          </div>
+          <div>
+            {vendorError && (
+              <div className="text-red-500 p-4">{vendorError}</div>
+            )}
+            {followedVendors.map((v, i) => (
+              <div key={v._id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '13px 22px', borderBottom: i < followedVendors.length - 1 ? '1px solid #f9f9fc' : 'none' }}>
+                <div style={{ width: 36, height: 36, borderRadius: 10, background: '#f5f3ff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.1rem', flexShrink: 0 }}>
+                  {v.logo ? <img src={v.logo} alt="" className="w-full h-full rounded"/> : v.storeName[0]}
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: '0.82rem', fontWeight: 600, color: '#111827' }}>{v.storeName}</div>
+                  <div style={{ fontSize: '0.7rem', color: '#9ca3af' }}>{v.user?.name}</div>
+                </div>
+                <div style={{ fontSize: '0.75rem', color: '#f59e0b', fontWeight: 600 }}>★ {v.rating ?? 0}</div>
               </div>
-              <div style={{ flex: 1 }}>
-                <div style={{ fontSize: '0.82rem', fontWeight: 600, color: '#111827' }}>{v.name}</div>
-                <div style={{ fontSize: '0.7rem', color: '#9ca3af' }}>{v.category}</div>
-              </div>
-              <div style={{ fontSize: '0.75rem', color: '#f59e0b', fontWeight: 600 }}>★ {v.rating}</div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
     </div>
 
     {/* Quick actions */}
@@ -112,11 +165,12 @@ const Dashboard = () => (
         <div style={{ fontSize: '1rem', fontWeight: 600, color: '#fff', marginBottom: 4 }}>Discover new products</div>
         <div style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.75)' }}>Browse 500+ curated items from verified vendors</div>
       </div>
-      <Link to="/shop" style={{ background: '#fff', color: '#6d4aff', borderRadius: 8, padding: '10px 22px', fontWeight: 600, fontSize: '0.82rem', textDecoration: 'none', flexShrink: 0 }}>
+      <Link to="/products" style={{ background: '#fff', color: '#6d4aff', borderRadius: 8, padding: '10px 22px', fontWeight: 600, fontSize: '0.82rem', textDecoration: 'none', flexShrink: 0 }}>
         Shop Now →
       </Link>
     </div>
   </div>
-);
+  );
+};
 
 export default Dashboard;

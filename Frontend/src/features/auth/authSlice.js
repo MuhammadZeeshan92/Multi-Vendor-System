@@ -57,6 +57,7 @@ const initialState = {
   user: null,
   status: 'idle',
   error: null,
+  checked: false, 
 };
 
 const authSlice = createSlice({
@@ -102,13 +103,16 @@ const authSlice = createSlice({
       .addCase(fetchCurrentUser.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.user = action.payload;
+        state.checked = true; 
       })
       .addCase(fetchCurrentUser.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload
           ? action.payload.message || String(action.payload)
           : action.error.message;
+          state.checked = true; 
       })
+
       .addCase(logoutUser.fulfilled, (state) => {
         state.user = null;
         state.status = 'idle';

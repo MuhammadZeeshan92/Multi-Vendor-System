@@ -27,10 +27,15 @@ const Login = () => {
   // redirect user immediately after login based on their role
   useEffect(() => {
     if (!user) return;
-
+    console.log('Logged in user:', user);
     // SELLER without store -> force create store
-    if (user.role === 'seller' && !user.hasVendor) {
+    if (user.role === 'seller' && !user.hasCompletedProfile) {
       navigate('/vendor/create-store', { replace: true });
+      return;
+    }
+
+    if (user.role === 'buyer' && !user.hasCompletedProfile) {
+      navigate('/buyer/complete-profile', { replace: true });
       return;
     }
 

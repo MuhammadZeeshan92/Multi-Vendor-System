@@ -41,6 +41,7 @@ import FollowedVendors from './pages/buyers/FollowedVendors';
 // import BuyerReviews from './pages/buyer/Reviews';
 import BuyerSettings from './pages/buyers/Settings';
 import CreateStore from './pages/vendor/CreateStore';
+import CompleteProfile from './pages/buyers/CompleteProfile';
 
 function App() {
   const dispatch = useDispatch();
@@ -73,14 +74,18 @@ function App() {
             {/* Vendor discovery & storefront */}
             <Route path="/vendors" element={<VendorList />} />
             <Route path="/vendors/:id" element={<VendorStorefront />} />
-            <Route element={<RoleRoute allowedRoles={['buyer']} />}>
-              <Route element={<BuyerLayout />}>
-                <Route path="/buyer/dashboard" element={<BuyerDashboard />} />
-                <Route path="/buyer/orders" element={<BuyerOrders />} />
-                <Route path="/buyer/vendors" element={<FollowedVendors />} />
-                {/* <Route path="wishlist" element={<Wishlist />} />
+
+            <Route element={<ProtectedRoute />}>
+              <Route element={<RoleRoute allowedRoles={['buyer']} />}>
+                <Route element={<BuyerLayout />}>
+                  <Route path="/buyer/complete-profile" element={<CompleteProfile />} />
+                  <Route path="/buyer/dashboard" element={<BuyerDashboard />} />
+                  <Route path="/buyer/orders" element={<BuyerOrders />} />
+                  <Route path="/buyer/vendors" element={<FollowedVendors />} />
+                  {/* <Route path="wishlist" element={<Wishlist />} />
               <Route path="reviews" element={<BuyerReviews />} /> */}
-                <Route path="/buyer/settings" element={<BuyerSettings />} />
+                  <Route path="/buyer/settings" element={<BuyerSettings />} />
+                </Route>
               </Route>
             </Route>
             {/* auth */}
@@ -88,10 +93,6 @@ function App() {
               <Route path="login" element={<Login />} />
               <Route path="register" element={<Register />} />
             </Route>
-            <Route
-              path="/vendor/create-store"
-              element={<CreateStore />}
-            />
 
             {/* protected routes (unchanged business logic) */}
             <Route path="/cart" element={<CartPage />} />
@@ -102,6 +103,10 @@ function App() {
 
               <Route element={<RoleRoute allowedRoles={['seller']} />}>
                 <Route element={<VendorLayout />}>
+                  <Route
+                    path="/vendor/create-store"
+                    element={<CreateStore />}
+                  />
                   <Route path="/vendor/dashboard" element={<VendorDashboard />} />
                   <Route path="/vendor/products" element={<VendorProducts />} />
                   <Route path="/vendor/products/add" element={<AddProduct />} />

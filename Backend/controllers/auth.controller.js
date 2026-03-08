@@ -2,6 +2,28 @@ const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const Vendor = require("../models/Vendor");
+const Buyer = require("../models/Buyer");
+
+async function buildUserPayload(user) {
+  const payload = {
+    _id: user._id,
+    name: user.name,
+    email: user.email,
+    role: user.role,
+  };
+
+  if (user.role === 'seller') {
+    const vendor = await Vendor.findOne({ user: user._id });
+    payload.hasCompletedProfile = !!vendor;
+    payload.vendor=vendor;
+  }
+  if (user.role === 'buyer') {
+    const buyer = await Buyer.findOne({ user: user._id });
+    payload.hasCompletedProfile = !!buyer;
+    payload.buyer=buyer;
+  }
+  return payload;
+}
 
 // Register
 exports.registerUser = async (req, res) => {
@@ -61,11 +83,7 @@ exports.loginUser = async (req, res) => {
             return res.status(400).json({ message: "Invalid credentials" });
         }
 
-        let hasVendor = false;
-        if (user.role === "seller") {
-            const vendor = await Vendor.findOne({ user: user._id });
-            hasVendor = !!vendor;
-        }
+        const userObj = await buildUserPayload(user);
 
         const token = jwt.sign(
             { id: user._id, role: user.role },
@@ -83,12 +101,8 @@ exports.loginUser = async (req, res) => {
         res.status(200).json({
             message: "Login successful",
             role: user.role,
-            hasVendor,
-            user: {
-                _id: user._id,
-                name: user.name,
-                email: user.email,
-            }
+            hasCompletedProfile: userObj.hasCompletedProfile,
+            user: userObj.buyer || userObj.vendor || null,
         });
 
     } catch (error) {
@@ -112,9 +126,9 @@ exports.getCurrentUser = async (req, res) => {
         if (!token) return res.status(401).json({ message: 'Not authenticated' });
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        const user = await User.findById(decoded.id).select('-password');
-        if (!user) return res.status(404).json({ message: 'User not found' });
-
+        const userData = await User.findById(decoded.id).select('-password');
+        if (!userData) return res.status(404).json({ message: 'User not found' });
+        const user = await buildUserPayload(userData);
         return res.status(200).json(user);
     } catch (error) {
         return res.status(401).json({ message: 'Invalid token' });

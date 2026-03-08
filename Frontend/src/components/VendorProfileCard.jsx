@@ -1,8 +1,37 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { fetchBuyerData } from '../features/buyers/buyerSlice';
+import { followVendor, unfollowVendor } from '../features/buyers/buyerSlice';
 
 const VendorProfileCard = ({ vendor }) => {
   const user = useSelector((state) => state.auth.user);
+  const status = useSelector(state => state.buyers.status);
+  const followed = useSelector((state) => state.buyers?.followed || []);
+  const dispatch = useDispatch();
+
+  // make sure we have the buyer’s data (stats + followed list)
+  useEffect(() => {
+    if (user?.role === 'buyer' && followed.length === 0) {
+      dispatch(fetchBuyerData());
+    }
+  }, [user, dispatch, followed.length]);
+
+  const isFollowing = Boolean(vendor && followed.includes(vendor._id));
+  const isWorking = status === 'loading';
+  const handleButton = () => {
+    console.log('User:', user, 'Vendor:', vendor, 'Is Following:', isFollowing);
+
+    if (!user) return; // or navigate('/auth/login') if you want
+    if (user.role !== 'buyer') return;
+
+    if (isFollowing) {
+      dispatch(unfollowVendor(vendor._id));
+    } else {
+      dispatch(followVendor(vendor._id));
+    }
+  };
   // const isFollowing = user?.following.includes(vendor._id);
 
   if (!vendor) return null;
@@ -68,9 +97,13 @@ const VendorProfileCard = ({ vendor }) => {
             <div className="mt-3 flex flex-wrap gap-2 justify-center md:justify-start">
               <button
                 type="button"
-                className="bg-indigo-600 text-white rounded-lg px-4 py-1.5 text-sm font-medium hover:bg-indigo-700 transition duration-200"
+                disabled={isWorking}
+                onClick={handleButton}
+                className={`bg-indigo-600 text-white rounded-lg px-4 py-1.5 text-sm font-medium hover:bg-indigo-700 transition duration-200 ${status === 'loading' ? 'opacity-50 cursor-not-allowed' : 'active:scale-95'} ${isWorking ? 'opacity-50 cursor-not-allowed' : 'active:scale-95'}`}
               >
-                {user?.role === 'buyer' ? 'Follow Store' : 'View Store'}
+                {user?.role === 'buyer'
+                  ? (isFollowing ? 'Unfollow' : 'Follow Store')
+                  : 'View Store'}
               </button>
             </div>
           </div>

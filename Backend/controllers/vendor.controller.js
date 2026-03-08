@@ -30,7 +30,7 @@ exports.getVendorProfile = async (req, res) => {
       return res.status(400).json({ message: 'Invalid vendor id' });
     }
 
-    const vendor = await Vendor.findOne({ user: id }).populate('user', '-password');
+    const vendor = await Vendor.findOne({ _id: id }).populate('user', '-password');
 
     if (!vendor) return res.status(404).json({ message: 'Vendor not found' });
 

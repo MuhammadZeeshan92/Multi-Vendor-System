@@ -5,6 +5,7 @@ import cartReducer from '../features/cart/cartSlice';
 import orderReducer from '../features/orders/orderSlice';
 import adminReducer from '../features/admin/adminSlice';
 import vendorReducer from '../features/vendors/vendorSlice';
+import buyerReducer from '../features/buyers/buyerSlice';
 
 export const store = configureStore({
   reducer: {
@@ -14,6 +15,7 @@ export const store = configureStore({
     orders: orderReducer,
     admin: adminReducer,
     vendors: vendorReducer,
+    buyers: buyerReducer, // for buyer-specific vendor data (e.g. followed vendors)
   },
 });
 

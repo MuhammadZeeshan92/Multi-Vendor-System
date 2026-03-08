@@ -45,7 +45,7 @@ const VendorList = () => {
           console.log(vendor),
           <Link
             key={vendor._id}
-            to={`/vendors/${vendor.user._id}`}
+            to={`/vendors/${vendor._id}`}
             className="card p-4 flex items-center gap-4 hover:no-underline"
           >
             <div className="h-12 w-12 rounded-full bg-indigo-50 flex items-center justify-center overflow-hidden">

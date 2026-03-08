@@ -10,6 +10,7 @@ const adminRoutes = require("./routes/admin.routes.js");
 const cloudinaryRoutes = require("./routes/cloudinary.route.js");
 const vendorRoutes = require('./routes/vendor.routes');     
 const webhookRouter = require('./routes/webhook');
+const buyerRoutes = require('./routes/buyer.routes');
 
 
 
@@ -52,6 +53,8 @@ app.use("/api", cloudinaryRoutes);
 app.use("/api/admin", adminRoutes);
 
 app.use('/api/vendors', vendorRoutes);
+// …later…
+app.use('/api/buyers', buyerRoutes);
 
 
 // Health Route
