@@ -58,7 +58,7 @@ const CreateStore = () => {
   const handleSubmit = async e => {
     e.preventDefault();
     if (!user) return alert("Please login first");
-
+    console.log(user)
     setUploading(true);
     try {
       const sigResp = await api.get("/cloudinary-signature");
@@ -76,7 +76,7 @@ const CreateStore = () => {
         description: form.description,
         logo: uploadedLogo?.secure_url || null,
         banner: uploadedBanner?.secure_url || null,
-        user: user.user._id,
+        user: user._id,
       };
 
       await api.post("/vendors/create", payload);

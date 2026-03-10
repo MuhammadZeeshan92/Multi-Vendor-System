@@ -42,7 +42,6 @@ const VendorList = () => {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {list.map((vendor) => (
-          console.log(vendor),
           <Link
             key={vendor._id}
             to={`/vendors/${vendor._id}`}

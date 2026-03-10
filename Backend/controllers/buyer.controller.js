@@ -5,10 +5,16 @@ const Order = require('../models/Order');
 const Buyer = require('../models/Buyer');
 
 exports.getBuyerDashboard = async (req, res) => {
-    // could derive from orders instead of storing in user record
-    const orders = await Order.find({ customer: req.user._id });
-    const totalSpent = orders.reduce((sum, o) => sum + o.totalAmount, 0);
-    res.json({ totalOrders: orders.length, totalSpent, recent: orders.slice(-5) });
+    // compute stats and return the five most recent orders
+    const allOrders = await Order.find({ customer: req.user._id })
+      .sort({ createdAt: -1 }); // newest first
+
+    const totalOrders = allOrders.length;
+    const totalSpent = allOrders.reduce((sum, o) => sum + o.totalAmount, 0);
+
+    const recent = allOrders.slice(0, 5); // already sorted
+
+    res.json({ totalOrders, totalSpent, recent });
 };
 
 exports.getFollowedVendors = async (req, res) => {

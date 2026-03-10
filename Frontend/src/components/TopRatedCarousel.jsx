@@ -12,12 +12,9 @@ const TopRatedCarousel = () => {
 
     const load = async () => {
       try {
-        console.log('loading');
         const res = await api.get('/products/top-rated', { params: { limit: 8 } });
-        console.log(res);
         if (!mounted) return;
         const data = Array.isArray(res.data) ? res.data : res.data.products || [];
-        console.log(data);
         setItems(data);
       } catch (e) {
         // silently fail to keep landing resilient

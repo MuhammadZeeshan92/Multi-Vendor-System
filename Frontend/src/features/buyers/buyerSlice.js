@@ -10,6 +10,7 @@ export const fetchBuyerData = createAsyncThunk(
         api.get('/buyers/dashboard'),
         api.get('/buyers/vendors'),
       ]);
+      // dash.data now includes totalOrders, totalSpent, recent
       return { stats: dash.data, followed: follow.data };
     } catch (err) {
       return thunkAPI.rejectWithValue(err.response?.data || err.message);

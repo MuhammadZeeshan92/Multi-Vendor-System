@@ -69,8 +69,11 @@ exports.getVendorProducts = async (req, res) => {
     const skip = (page - 1) * limit;
 
     const total = await Product.countDocuments({ vendor: id });
+    console.log("Id",id,"Total products", total)
 
-    const products = await Product.find({ vendor: id })
+    const vendor = await Vendor.findById({ _id: id })
+
+    const products = await Product.find({ vendor: vendor.user })
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);

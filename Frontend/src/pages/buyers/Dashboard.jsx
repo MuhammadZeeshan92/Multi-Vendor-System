@@ -40,18 +40,21 @@ const Dashboard = () => {
     })();
   }, [followedIds]);
 
+  // stats come from the buyer slice rather than the user object
   let totalVendors = followedIds?.length || 0;
+  const statsFromSlice = useSelector(state => state.buyers.stats) || {};
+
   const stats = [
     {
       label: 'Total Orders',
-      value: user.buyer.stats?.totalOrders,
+      value: statsFromSlice.totalOrders,
       sub: '3 in progress',
       icon: '🛍️',
       color: '#6d4aff'
     },
     {
       label: 'Total Spent',
-      value: user.buyer.stats?.totalSpent,
+      value: statsFromSlice.totalSpent,
       sub: 'Lifetime purchases',
       icon: '💳',
       color: '#0ea5e9'
@@ -65,11 +68,9 @@ const Dashboard = () => {
     }
   ];
 
-  const recentOrders = [
-    { id: '#ORD-1045', product: 'Handmade Ceramic Mug', vendor: 'Clay & Co.', date: 'May 28, 2025', status: 'Delivered', amount: '$34.00', img: '🫙' },
-    { id: '#ORD-1044', product: 'Organic Lavender Soap', vendor: 'Pure Roots', date: 'May 24, 2025', status: 'Shipped', amount: '$18.50', img: '🧼' },
-    { id: '#ORD-1043', product: 'Linen Tote Bag', vendor: 'ThreadWorks', date: 'May 19, 2025', status: 'Processing', amount: '$52.00', img: '👜' },
-  ];
+  // use real recent orders from slice as well
+  const recentOrders = statsFromSlice.recent || [];
+
 
   const statusStyle = {
     Delivered:  { bg: '#dcfce7', color: '#15803d' },
@@ -113,23 +114,33 @@ const Dashboard = () => {
           <Link to="/buyer/orders" style={{ fontSize: '0.75rem', color: '#6d4aff', textDecoration: 'none', fontWeight: 500 }}>View all →</Link>
         </div>
         <div>
-          {recentOrders.map((o, i) => (
-            <div key={o.id} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 22px', borderBottom: i < recentOrders.length - 1 ? '1px solid #f9f9fc' : 'none' }}>
-              <div style={{ width: 40, height: 40, borderRadius: 10, background: '#f5f3ff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem', flexShrink: 0 }}>
-                {o.img}
+          {recentOrders.map((o, i) => {
+            const item = o.orderItems?.[0] || {};
+            const prodName = item.name || '';
+            const vendId = item.vendor || '';
+            const dateStr = o.createdAt ? new Date(o.createdAt).toLocaleDateString() : '';
+            const amt = `$${(o.totalAmount ?? 0).toFixed(2)}`;
+            // simple emoji based on product first char
+            const img = prodName.charAt(0) || '🛒';
+
+            return (
+              <div key={o._id} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 22px', borderBottom: i < recentOrders.length - 1 ? '1px solid #f9f9fc' : 'none' }}>
+                <div style={{ width: 40, height: 40, borderRadius: 10, background: '#f5f3ff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem', flexShrink: 0 }}>
+                  {img}
+                </div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontSize: '0.82rem', fontWeight: 600, color: '#111827', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{prodName}</div>
+                  <div style={{ fontSize: '0.72rem', color: '#9ca3af' }}>{vendId} · {dateStr}</div>
+                </div>
+                <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                  <div style={{ fontSize: '0.82rem', fontWeight: 600, color: '#111827' }}>{amt}</div>
+                  <span style={{ fontSize: '0.65rem', fontWeight: 600, padding: '2px 8px', borderRadius: 20, background: statusStyle[o.status]?.bg, color: statusStyle[o.status]?.color }}>
+                    {o.status}
+                  </span>
+                </div>
               </div>
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontSize: '0.82rem', fontWeight: 600, color: '#111827', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{o.product}</div>
-                <div style={{ fontSize: '0.72rem', color: '#9ca3af' }}>{o.vendor} · {o.date}</div>
-              </div>
-              <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                <div style={{ fontSize: '0.82rem', fontWeight: 600, color: '#111827' }}>{o.amount}</div>
-                <span style={{ fontSize: '0.65rem', fontWeight: 600, padding: '2px 8px', borderRadius: 20, background: statusStyle[o.status]?.bg, color: statusStyle[o.status]?.color }}>
-                  {o.status}
-                </span>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 

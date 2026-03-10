@@ -17,6 +17,7 @@ const AddProduct = () => {
   const [imageFiles, setImageFiles] = useState([]);
   const [uploadProgress, setUploadProgress] = useState([]);
   const { user } = useSelector((state) => state.auth);
+  console.log('Current user in AddProduct:', user);
 
   // Revoke object URLs when imageFiles change or on unmount to avoid memory leaks
   useEffect(() => {
