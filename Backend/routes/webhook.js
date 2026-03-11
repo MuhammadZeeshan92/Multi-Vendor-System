@@ -6,6 +6,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const Order = require('../models/Order');
 const Product = require('../models/Product');
 const Vendor = require('../models/Vendor');
+const Admin = require('../models/Admin')
 // optional: const User = require('../models/User'); // to get vendor emails
 
 // Use raw body for this route only
@@ -49,14 +50,24 @@ router.post('/stripe-webhook', express.raw({ type: 'application/json' }), async 
           await Product.findByIdAndUpdate(oi.product, { $inc: { stock: -oi.quantity }});
         }
 
+        let adminRevenue=0;
+
         for (const oi of order.orderItems) {
           const vendor = await Vendor.findOne({user: oi.vendor});
           if (vendor) {
-            vendor.totalRevenue += oi.price * oi.quantity;
+            vendor.totalRevenue += oi.price - (oi.quantity*10);
             vendor.totalOrders += 1;
+            adminRevenue+=10;
             await vendor.save();
           }
         }
+
+        await Admin.findOneAndUpdate({}, {
+          $inc: {
+            revenue: adminRevenue,
+          }
+        });
+        
 
         // Notify vendor(s) - placeholder
         // e.g. notifyVendors(order);

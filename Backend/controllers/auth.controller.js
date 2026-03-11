@@ -98,12 +98,8 @@ exports.loginUser = async (req, res) => {
             maxAge: 24 * 60 * 60 * 1000,
         });
 
-        res.status(200).json({
-            message: "Login successful",
-            role: user.role,
-            hasCompletedProfile: userObj.hasCompletedProfile,
-            user: userObj.buyer || userObj.vendor || null,
-        });
+        return res.status(200).json(userObj);
+
 
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -112,7 +108,7 @@ exports.loginUser = async (req, res) => {
 
 exports.logoutUser = (req, res) => {
     res.clearCookie("token", {
-        httpOnly: true,
+        httpOnly: true, 
         secure: false, // true in production (HTTPS)
         sameSite: "strict",
     });

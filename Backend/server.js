@@ -11,6 +11,7 @@ const cloudinaryRoutes = require("./routes/cloudinary.route.js");
 const vendorRoutes = require('./routes/vendor.routes');     
 const webhookRouter = require('./routes/webhook');
 const buyerRoutes = require('./routes/buyer.routes');
+const chatbotRoutes = require('./routes/chatbot.route');
 
 
 
@@ -55,6 +56,8 @@ app.use("/api/admin", adminRoutes);
 app.use('/api/vendors', vendorRoutes);
 // …later…
 app.use('/api/buyers', buyerRoutes);
+app.use('/api/chat', chatbotRoutes);
+
 
 
 // Health Route
