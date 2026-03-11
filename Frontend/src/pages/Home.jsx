@@ -4,10 +4,11 @@ import Hero from '../components/Hero';
 import TopRatedCarousel from '../components/TopRatedCarousel';
 import VendorCarousel from '../components/VendorCarousel';
 import { Link } from 'react-router-dom';
+import Page from '../components/Page';
 
 const Home = () => {
   return (
-    <div className="container py-8 space-y-10">
+    <Page className="container py-8 space-y-10">
       <Helmet>
         <title>Home — Marketplace</title>
         <meta
@@ -18,12 +19,12 @@ const Home = () => {
       <Hero />
 
       <section className="grid md:grid-cols-3 gap-6">
-        <div className="md:col-span-2 space-y-6">
+        <div className="md:col-span-2 space-y-6 min-w-0">
           <TopRatedCarousel />
           <VendorCarousel />
         </div>
 
-        <aside className="card p-5 space-y-4">
+        <aside className="card p-5 space-y-4 min-w-0">
           <h2 className="text-lg font-semibold text-gray-900">Shop by category</h2>
           <p className="text-sm text-gray-600">
             Browse curated categories to quickly discover products across different vendors.
@@ -56,8 +57,8 @@ const Home = () => {
         </aside>
       </section>
 
-      <section className="card p-6 flex flex-col md:flex-row items-center justify-between gap-4">
-        <div>
+      <section className="card p-5 md:p-6 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="text-center md:text-left">
           <h2 className="text-xl font-semibold text-gray-900 mb-1">
             Ready to explore the full catalog?
           </h2>
@@ -67,12 +68,12 @@ const Home = () => {
         </div>
         <Link
           to="/products"
-          className="bg-indigo-600 text-white rounded-lg px-5 py-2.5 text-sm font-medium hover:bg-indigo-700 transition duration-200"
+          className="w-full md:w-auto text-center bg-indigo-600 text-white rounded-lg px-5 py-2.5 text-sm font-medium hover:bg-indigo-700 transition duration-200"
         >
           Explore all products
         </Link>
       </section>
-    </div>
+    </Page>
   );
 };
 

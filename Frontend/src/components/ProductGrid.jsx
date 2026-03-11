@@ -3,7 +3,14 @@ import ProductCard from './ProductCard';
 
 const ProductGrid = ({ products = [], hideVendor = false }) => {
   if (!products.length) {
-    return <p className="text-gray-600">No products to show.</p>;
+    return (
+      <div className="card p-6 text-center">
+        <p className="text-sm font-semibold text-gray-900">No products found</p>
+        <p className="text-sm text-gray-600 mt-1">
+          Try adjusting your search, filters, or price range.
+        </p>
+      </div>
+    );
   }
 
   return (

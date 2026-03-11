@@ -5,6 +5,7 @@ import Button from '../../components/Button';
 import GroupedCartSummary from '../../components/GroupedCartSummary';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { clearCart } from '../../features/cart/cartSlice';
 
 const Checkout = () => {
   const dispatch = useDispatch();
@@ -32,6 +33,7 @@ useEffect(() => {
     try {
       const response = await dispatch(createOrder({ shipping, items })).unwrap();
       window.location.href = response.sessionUrl;
+      dispatch(clearCart());
     } catch (err) {
       console.error(err);
       setStatus('failed');

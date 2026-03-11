@@ -7,6 +7,9 @@ import Spinner from '../../components/Spinner';
 import Pagination from '../../components/Pagination';
 import FiltersBar from '../../components/FiltersBar';
 import ProductGrid from '../../components/ProductGrid';
+import Page from '../../components/Page';
+import PageHeader from '../../components/PageHeader';
+import PageHero from '../../components/PageHero';
 
 const ProductList = () => {
   const dispatch = useDispatch();
@@ -79,7 +82,7 @@ const localPagination = {
   if (status === 'loading' && !list.length) return <Spinner />;
 
   return (
-    <div className="container py-6 space-y-4">
+    <Page className="container py-6 space-y-4">
       <Helmet>
         <title>Products — Marketplace</title>
         <meta
@@ -87,14 +90,15 @@ const localPagination = {
           content="Browse all Marketplace products with advanced search, filters, categories, and vendor chips."
         />
       </Helmet>
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
-        <div>
-          <h1 className="text-2xl font-semibold text-gray-900">Products</h1>
-          <p className="text-sm text-gray-600">
-            Browse all products with rich filters and vendor discovery.
-          </p>
-        </div>
-      </div>
+      <PageHero 
+        title="Discover Premium Products" 
+        subtitle="Explore our vast marketplace of curated items from trusted vendors around the world."
+        gradient="from-indigo-600 via-indigo-700 to-purple-800"
+      />
+      <PageHeader
+        title="Products"
+        subtitle="Browse all products with rich filters and vendor discovery."
+      />
 
       <FiltersBar filters={filters} onChange={handleFiltersChange} vendors={vendors} />
 
@@ -104,7 +108,7 @@ const localPagination = {
         pagination={localPagination}
         onPageChange={(p) => setFilters({ ...filters, page: p })}
       />
-    </div>
+    </Page>
   );
 };
 

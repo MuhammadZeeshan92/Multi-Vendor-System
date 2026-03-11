@@ -5,6 +5,7 @@ const Stripe = require('stripe');
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const Order = require('../models/Order');
 const Product = require('../models/Product');
+const Vendor = require('../models/Vendor');
 // optional: const User = require('../models/User'); // to get vendor emails
 
 // Use raw body for this route only
@@ -25,6 +26,8 @@ router.post('/stripe-webhook', express.raw({ type: 'application/json' }), async 
       const orderId = session.metadata?.orderId;
 
       const order = await Order.findById(orderId);
+
+      console.log(order.orderItems)
       if (!order) {
         console.warn('Order not found for webhook orderId', orderId);
       } else if (!order.isPaid) {
@@ -39,9 +42,20 @@ router.post('/stripe-webhook', express.raw({ type: 'application/json' }), async 
         };
         await order.save();
 
+
+
         // Deduct stock
         for (const oi of order.orderItems) {
           await Product.findByIdAndUpdate(oi.product, { $inc: { stock: -oi.quantity }});
+        }
+
+        for (const oi of order.orderItems) {
+          const vendor = await Vendor.findOne({user: oi.vendor});
+          if (vendor) {
+            vendor.totalRevenue += oi.price * oi.quantity;
+            vendor.totalOrders += 1;
+            await vendor.save();
+          }
         }
 
         // Notify vendor(s) - placeholder

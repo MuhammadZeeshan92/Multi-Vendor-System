@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { fetchPublicVendors } from '../../features/vendors/vendorSlice';
 import Spinner from '../../components/Spinner';
+import PageHero from '../../components/PageHero';
 
 const VendorList = () => {
   const dispatch = useDispatch();
@@ -33,12 +34,17 @@ const VendorList = () => {
           content="Browse featured Marketplace vendors and open their storefronts."
         />
       </Helmet>
-      <div className="mb-6 text-center">
+      <PageHero 
+        title="Our Featured Vendors" 
+        subtitle="Meet the creators and entrepreneurs driving our community forward."
+        gradient="from-indigo-600 via-indigo-700 to-purple-800"
+      />
+      {/* <div className="mb-6 text-center">
         <h1 className="text-3xl font-semibold text-gray-900 mb-2">Featured Vendors</h1>
         <p className="text-gray-600">
           Discover trusted sellers and explore their curated storefronts.
         </p>
-      </div>
+      </div> */}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {list.map((vendor) => (

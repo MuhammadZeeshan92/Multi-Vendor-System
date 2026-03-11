@@ -9,21 +9,44 @@ const Pagination = ({ pagination, onPageChange }) => {
   if (pagesArr.length <= 1) return null;
 
   return (
-    <div className="flex justify-center mt-6 space-x-1 text-sm">
-      {pagesArr.map((p) => (
-        <button
-          key={p}
-          type="button"
-          onClick={() => onPageChange(p)}
-          className={`px-3 py-1.5 rounded-lg border ${
-            p === page
-              ? 'bg-indigo-600 text-white border-indigo-600'
-              : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'
-          }`}
-        >
-          {p}
-        </button>
-      ))}
+    <div className="flex items-center justify-center mt-8 gap-2 text-sm">
+      <button
+        type="button"
+        onClick={() => onPageChange(Math.max(1, page - 1))}
+        disabled={page <= 1}
+        className="px-3 py-1.5 rounded-xl border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+        aria-label="Previous page"
+      >
+        Prev
+      </button>
+
+      <div className="flex items-center gap-1">
+        {pagesArr.map((p) => (
+          <button
+            key={p}
+            type="button"
+            onClick={() => onPageChange(p)}
+            className={`h-9 min-w-9 px-3 rounded-xl border transition ${
+              p === page
+                ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm'
+                : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'
+            }`}
+            aria-current={p === page ? 'page' : undefined}
+          >
+            {p}
+          </button>
+        ))}
+      </div>
+
+      <button
+        type="button"
+        onClick={() => onPageChange(Math.min(pages, page + 1))}
+        disabled={page >= pages}
+        className="px-3 py-1.5 rounded-xl border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+        aria-label="Next page"
+      >
+        Next
+      </button>
     </div>
   );
 };

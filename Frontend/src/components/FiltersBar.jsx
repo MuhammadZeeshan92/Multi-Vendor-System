@@ -47,22 +47,27 @@ const FiltersBar = ({ filters, onChange, vendors = [] }) => {
   };
 
   return (
-    <section className="card p-4 space-y-3 mb-4">
+    <section className="card p-4 md:p-5 space-y-4 mb-4">
       <div className="flex flex-col md:flex-row gap-3 md:items-center">
-        <input
-          type="search"
-          placeholder="Search products..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          aria-label="Search products"
-        />
+        <div className="relative flex-1">
+          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">
+            ⌕
+          </span>
+          <input
+            type="search"
+            placeholder="Search products, brands, or vendors..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full border border-gray-200 rounded-xl pl-9 pr-3 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            aria-label="Search products"
+          />
+        </div>
 
         <div className="flex gap-2">
           <select
             value={filters.sort || ''}
             onChange={handleSort}
-            className="border border-gray-200 rounded-lg px-3 py-2 text-sm bg-white"
+            className="border border-gray-200 rounded-xl px-3 py-2.5 text-sm bg-white"
             aria-label="Sort products"
           >
             <option value="">Sort</option>
@@ -84,9 +89,9 @@ const FiltersBar = ({ filters, onChange, vendors = [] }) => {
                 key={cat}
                 type="button"
                 onClick={() => handleCategory(cat)}
-                className={`px-3 py-1.5 rounded-full border text-xs ${
+                className={`px-3 py-1.5 rounded-full border text-xs font-medium transition ${
                   isActive
-                    ? 'bg-indigo-600 text-white border-indigo-600'
+                    ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm'
                     : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'
                 }`}
               >
@@ -97,32 +102,34 @@ const FiltersBar = ({ filters, onChange, vendors = [] }) => {
         </div>
 
         {/* Price range */}
-        <div className="flex items-center gap-2 ml-auto">
-          <span className="text-gray-500">Price</span>
-          <input
-            type="number"
-            min="0"
-            placeholder="Min"
-            value={filters.minPrice || ''}
-            onChange={(e) => handlePrice('minPrice', e.target.value)}
-            className="w-20 border border-gray-200 rounded-lg px-2 py-1 text-xs"
-          />
-          <span className="text-gray-400">–</span>
-          <input
-            type="number"
-            min="0"
-            placeholder="Max"
-            value={filters.maxPrice || ''}
-            onChange={(e) => handlePrice('maxPrice', e.target.value)}
-            className="w-20 border border-gray-200 rounded-lg px-2 py-1 text-xs"
-          />
+        <div className="flex flex-wrap items-center gap-2 ml-auto">
+          <span className="text-gray-500 font-medium">Price</span>
+          <div className="flex items-center gap-2">
+            <input
+              type="number"
+              min="0"
+              placeholder="Min"
+              value={filters.minPrice || ''}
+              onChange={(e) => handlePrice('minPrice', e.target.value)}
+              className="w-20 sm:w-24 border border-gray-200 rounded-xl px-2.5 py-2 text-xs bg-white"
+            />
+            <span className="text-gray-400">–</span>
+            <input
+              type="number"
+              min="0"
+              placeholder="Max"
+              value={filters.maxPrice || ''}
+              onChange={(e) => handlePrice('maxPrice', e.target.value)}
+              className="w-20 sm:w-24 border border-gray-200 rounded-xl px-2.5 py-2 text-xs bg-white"
+            />
+          </div>
         </div>
       </div>
 
       {/* Vendor chips */}
       {vendors.length > 0 && (
         <div className="flex items-center gap-2">
-          <span className="text-xs text-gray-500 whitespace-nowrap">All Vendor</span>
+          <span className="text-xs text-gray-500 whitespace-nowrap font-medium">Vendors</span>
           <div className="flex gap-2 overflow-x-auto pb-1">
             {vendors.map((v) => {
               const active = filters.vendor === v._id;
@@ -131,13 +138,13 @@ const FiltersBar = ({ filters, onChange, vendors = [] }) => {
                   key={v._id}
                   type="button"
                   onClick={() => handleVendor(v._id)}
-                  className={`flex items-center gap-2 px-3 py-1.5 rounded-full border text-xs whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 py-2 rounded-full border text-xs whitespace-nowrap font-medium transition ${
                     active
-                      ? 'bg-indigo-600 text-white border-indigo-600'
+                      ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm'
                       : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'
                   }`}
                 >
-                  <div className="h-6 w-6 rounded-full bg-indigo-50 flex items-center justify-center overflow-hidden">
+                  <div className="h-6 w-6 rounded-full bg-indigo-50 flex items-center justify-center overflow-hidden border border-white/40">
                     {v.logo ? (
                       <img
                         src={v.logo}

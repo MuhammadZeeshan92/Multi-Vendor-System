@@ -6,6 +6,9 @@ import Input from '../../components/Input';
 import Button from '../../components/Button';
 import { useLocation } from 'react-router-dom'
 
+import Page from '../../components/Page';
+import PageHeader from '../../components/PageHeader';
+
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -54,13 +57,13 @@ const Login = () => {
   }, [user, navigate, location]);
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center bg-gray-50 py-10">
+    <Page className="min-h-[calc(100vh-4rem)] flex items-center justify-center bg-gray-50 py-10">
       <div className="w-full max-w-md card p-6 space-y-6">
         <div className="space-y-1 text-center">
-          <h2 className="text-2xl font-semibold text-gray-900">Welcome back</h2>
-          <p className="text-sm text-gray-600">
-            Sign in to manage your orders, cart, or vendor dashboard.
-          </p>
+          <PageHeader
+            title="Welcome back"
+            subtitle="Sign in to manage your orders, cart, or vendor dashboard."
+          />
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
           <Input
@@ -91,7 +94,7 @@ const Login = () => {
           </Link>
         </p>
       </div>
-    </div>
+    </Page>
   );
 };
 

@@ -43,12 +43,23 @@ const AdminDashboard = () => {
 
   return (
     <div className="space-y-8">
-      <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
-        <div>
-          <h1 className="text-2xl font-semibold text-gray-900">Admin Dashboard</h1>
+      <header className="flex flex-col md:flex-row md:items-end md:justify-between gap-3">
+        <div className="space-y-1">
+          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
+            Admin
+          </p>
+          <h1 className="text-2xl md:text-3xl font-semibold text-gray-900 tracking-tight">
+            Dashboard
+          </h1>
           <p className="text-sm text-gray-600">
             Overview of users, vendors, and platform performance.
           </p>
+        </div>
+        <div className="flex items-center gap-2 text-xs text-gray-500">
+          <span className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-3 py-1.5">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+            Live stats
+          </span>
         </div>
       </header>
 
@@ -63,7 +74,7 @@ const AdminDashboard = () => {
       </div>
 
       {/* ACTIVE USERS */}
-      <div className="card p-4">
+      <div className="card p-4 md:p-5">
         <ListSection
           title="Active Users"
           data={activeUsersList}
@@ -76,7 +87,7 @@ const AdminDashboard = () => {
       </div>
 
       {/* ACTIVE SELLERS */}
-      <div className="card p-4">
+      <div className="card p-4 md:p-5">
         <ListSection
           title="Active Sellers"
           data={activeSellersList}

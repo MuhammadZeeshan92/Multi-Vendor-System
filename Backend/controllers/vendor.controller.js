@@ -12,7 +12,6 @@ exports.createVendor = async (req, res) => {
 
     const existing = await Vendor.findOne({ user: userId });
     if (existing) return res.status(400).json({ message: "Vendor already exists" });
-
     const vendor = await Vendor.create({ storeName, description, logo, banner, user: userId });
 
     res.status(201).json(vendor);
@@ -45,10 +44,10 @@ exports.getVendorProfile = async (req, res) => {
 exports.getAllVendorsProfile = async (req, res) => {
   try {
     const vendors = await Vendor.find().populate({
-    path: 'user',
-    match: { role: 'seller', isActive: true, isBlocked: false },
-    select: '-password'
-  });
+      path: 'user',
+      match: { role: 'seller', isActive: true, isBlocked: false },
+      select: '-password'
+    });
     res.json(vendors);
   } catch (error) {
     console.error('All vendors profile error:', error);
@@ -109,12 +108,11 @@ exports.updateVendorProfile = async (req, res) => {
       return res.status(403).json({ message: 'Unauthorized' });
     }
 
-    const { logo, banner, storeName, bio } = req.body;
+    const { logo, banner, storeName } = req.body;
 
     if (logo) vendor.logo = logo;
     if (banner) vendor.banner = banner;
     if (storeName) vendor.storeName = storeName;
-    if (bio) vendor.bio = bio;
 
     await vendor.save();
 
@@ -143,7 +141,7 @@ exports.updateVendorProfile = async (req, res) => {
 
 //       if (logoFile) {
 //         // upload logoFile.buffer to Cloudinary -> get secure_url
-//         vendor.logo = await uploadToCloudinary(logoFile); 
+//         vendor.logo = await uploadToCloudinary(logoFile);
 //       }
 //       if (bannerFile) {
 //         vendor.banner = await uploadToCloudinary(bannerFile);

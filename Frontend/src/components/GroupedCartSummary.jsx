@@ -30,11 +30,11 @@ const GroupedCartSummary = ({ items }) => {
         return (
           <section
             key={group.vendor._id || `vendor-${index}`}
-            className="card p-4 space-y-3"
+            className="card p-4 md:p-5 space-y-4"
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-full bg-indigo-50 flex items-center justify-center overflow-hidden">
+                <div className="h-11 w-11 rounded-2xl bg-gradient-to-br from-indigo-50 to-purple-50 flex items-center justify-center overflow-hidden border border-gray-100 shadow-sm">
                   {vendor.logo ? (
                     <img
                       src={vendor.logo}
@@ -67,13 +67,13 @@ const GroupedCartSummary = ({ items }) => {
               {vendorItems.map((item) => (
                 <div
                   key={`${item.productId}-${item.vendorId}`}
-                  className="py-2 flex items-center justify-between text-sm"
+                  className="py-3 flex items-center justify-between text-sm"
                 >
                   <div className="flex items-center gap-3">
                     <img
                       src={item.image}
                       alt={item.name}
-                      className="h-10 w-10 rounded-md object-cover"
+                      className="h-11 w-11 rounded-xl object-cover border border-gray-100"
                     />
                     <div>
                       <p className="font-medium text-gray-900 line-clamp-1">{item.name}</p>
@@ -89,17 +89,18 @@ const GroupedCartSummary = ({ items }) => {
               ))}
             </div>
 
-            <div className="pt-3 border-t border-gray-100 grid grid-cols-2 gap-2 text-xs text-gray-600">
-              <div>
-                <p>Vendor subtotal</p>
-                <p className="font-semibold text-gray-900">${subtotal.toFixed(2)}</p>
+            <div className="pt-4 border-t border-gray-100 grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-gray-600">
+              <div className="rounded-xl bg-gray-50 border border-gray-100 px-3 py-2">
+                <p className="text-[11px] uppercase tracking-wide text-gray-500">Subtotal</p>
+                <p className="font-semibold text-gray-900 text-sm">${subtotal.toFixed(2)}</p>
               </div>
-              <div className="text-right">
-                <p>Platform fee (10%)</p>
-                <p className="font-semibold text-gray-900">${platformFee.toFixed(2)}</p>
-                <p className="text-[11px] text-gray-500">
-                  Vendor payout ${vendorPayout.toFixed(2)}
-                </p>
+              <div className="rounded-xl bg-gray-50 border border-gray-100 px-3 py-2">
+                <p className="text-[11px] uppercase tracking-wide text-gray-500">Platform fee (10%)</p>
+                <p className="font-semibold text-gray-900 text-sm">${platformFee.toFixed(2)}</p>
+              </div>
+              <div className="rounded-xl bg-indigo-50 border border-indigo-100 px-3 py-2 sm:text-right">
+                <p className="text-[11px] uppercase tracking-wide text-indigo-700/80">Vendor payout</p>
+                <p className="font-semibold text-gray-900 text-sm">${vendorPayout.toFixed(2)}</p>
               </div>
             </div>
           </section>

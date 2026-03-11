@@ -3,6 +3,8 @@ import { useSelector } from 'react-redux';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import api from '../../utils/api';
+import PageHero from '../../components/PageHero';
+import Page from '../../components/Page';
 
 const AddProduct = () => {
   const [form, setForm] = useState({
@@ -17,9 +19,7 @@ const AddProduct = () => {
   const [imageFiles, setImageFiles] = useState([]);
   const [uploadProgress, setUploadProgress] = useState([]);
   const { user } = useSelector((state) => state.auth);
-  console.log('Current user in AddProduct:', user);
 
-  // Revoke object URLs when imageFiles change or on unmount to avoid memory leaks
   useEffect(() => {
     return () => {
       imageFiles.forEach((it) => {
@@ -28,7 +28,6 @@ const AddProduct = () => {
     };
   }, [imageFiles]);
 
-  // helper to upload a single file with progress using XMLHttpRequest
   const uploadFileWithProgress = (file, sigParams, onProgress) => {
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
@@ -41,26 +40,18 @@ const AddProduct = () => {
       fd.append('folder', sigParams.folder);
 
       xhr.open('POST', url);
-
       xhr.upload.onprogress = (e) => {
         if (e.lengthComputable) {
-          const percent = Math.round((e.loaded / e.total) * 100);
-          onProgress(percent);
+          onProgress(Math.round((e.loaded / e.total) * 100));
         }
       };
-
       xhr.onload = () => {
         if (xhr.status >= 200 && xhr.status < 300) {
-          try { resolve(JSON.parse(xhr.responseText)); } catch (err) { reject(err); }
+          resolve(JSON.parse(xhr.responseText));
         } else {
-          // include server response if available for easier debugging
-          const resp = xhr.responseText;
-          let parsed;
-          try { parsed = JSON.parse(resp); } catch (e) { parsed = { message: resp || 'Upload failed' }; }
-          reject(new Error(parsed.message || 'Upload failed'));
+          reject(new Error('Upload failed'));
         }
       };
-
       xhr.onerror = () => reject(new Error('Upload failed'));
       xhr.send(fd);
     });
@@ -70,59 +61,39 @@ const AddProduct = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  // On file select: validate, enforce 3-4 images, and store File objects + local preview URLs; upload happens on submit
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files || []);
     if (!files.length) return;
-
-    const maxSize = 5 * 1024 * 1024; // 5MB
+    const maxSize = 5 * 1024 * 1024;
     const invalid = files.find((f) => !f.type.startsWith('image/') || f.size > maxSize);
     if (invalid) {
       alert('Only image files under 5MB are allowed.');
       return;
     }
-
-    const maxFiles = 4; // allow up to 4 images
-    let newFiles = files.slice(0, maxFiles);
-
-    if (newFiles.length > maxFiles) {
-      alert(`You can upload up to ${maxFiles} images. Only the first ${maxFiles} will be used.`);
-    }
-
-    const combinedFiles = [...imageFiles, ...newFiles].slice(0, maxFiles);
-
-    // const limited = files.slice(0, maxFiles);
-    // const previews = limited.map((f) => ({ file: f, preview: URL.createObjectURL(f) }));
+    const maxFiles = 4;
+    const combinedFiles = [...imageFiles, ...files].slice(0, maxFiles);
     const previews = combinedFiles.map((f) => ({
-      file: f.file || f, // handle both File or existing {file, preview}
+      file: f.file || f,
       preview: f.preview || URL.createObjectURL(f),
     }));
     setImageFiles(previews);
-    // reset previously uploaded urls until submit
     setForm({ ...form, images: [] });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     let uploadedUrls = form.images || [];
-
     if (imageFiles.length > 0) {
       setUploading(true);
-      // initialize progress array
       setUploadProgress(Array(imageFiles.length).fill(0));
       try {
-        // ensure current user is a vendor
-        if (!user || user.role !== 'seller') {
-          alert('Only vendor accounts can upload product images.');
+        if (!user || (user.role !== 'seller' && user.role !== 'admin')) {
+          alert('Only seller accounts can upload products.');
           setUploading(false);
           return;
         }
-
         const sigResp = await api.get('/cloudinary-signature');
-
         const sigParams = sigResp.data;
-
         const uploadPromises = imageFiles.map(({ file }, idx) =>
           uploadFileWithProgress(file, sigParams, (p) => {
             setUploadProgress((prev) => {
@@ -132,159 +103,98 @@ const AddProduct = () => {
             });
           })
         );
-
         const results = await Promise.all(uploadPromises);
         uploadedUrls = results.map((r) => r.secure_url).filter(Boolean);
       } catch (error) {
         console.error('Upload error', error);
-        const msg = error?.response?.data?.message || error.message || 'Image upload failed';
-        alert(msg);
+        alert('Image upload failed');
         setUploading(false);
         return;
       } finally {
         setUploading(false);
       }
     }
-
     const payload = { ...form, images: uploadedUrls };
     try {
       await api.post('/products', payload);
       window.location.href = '/vendor/products';
     } catch (error) {
       console.error('Product save error', error);
-      alert('Failed to save product. Please try again.');
+      alert('Failed to save product');
     }
   };
 
   return (
-    <div className="max-w-2xl space-y-6">
-      <header>
-        <h1 className="text-2xl font-semibold text-gray-900">Add Product</h1>
-        <p className="text-sm text-gray-600">
-          Create a new product for your storefront. Images are uploaded via Cloudinary.
-        </p>
-      </header>
-      <form onSubmit={handleSubmit} className="card p-5 space-y-4">
-        <Input
-          label="Name"
-          name="name"
-          value={form.name}
-          onChange={handleChange}
-          required
-        />
-        <div className="flex flex-col gap-1 text-sm">
-          <label className="text-sm font-medium text-gray-700">Description</label>
-          <textarea
-            name="description"
-            value={form.description}
-            onChange={handleChange}
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            required
-          />
-        </div>
-        <Input
-          label="Price"
-          name="price"
-          type="number"
-          value={form.price}
-          onChange={handleChange}
-          required
-        />
-        <Input
-          label="Category"
-          name="category"
-          value={form.category}
-          onChange={handleChange}
-          required
-        />
-        <Input
-          label="Stock"
-          name="stock"
-          type="number"
-          value={form.stock}
-          onChange={handleChange}
-          required
-        />
-        <div className="space-y-2 text-sm">
-          <label className="text-sm font-medium text-gray-700">Images</label>
-          <input
-            id="imageUpload"
-            type="file"
-            multiple
-            onChange={handleImageUpload}
-            className="hidden"
-          />
+    <div className="bg-gray-50/50 min-h-screen pb-12">
+      <PageHero 
+        title="Add Product" 
+        subtitle="Bring your products to life. High-quality images and clear descriptions help you sell faster."
+        gradient="from-violet-600 via-indigo-700 to-blue-800"
+      />
 
-          <label
-            htmlFor="imageUpload"
-            className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition"
-          >
-            <div className="flex flex-col items-center justify-center pt-5 pb-6">
-              <svg
-                className="w-8 h-8 mb-2 text-gray-400"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M7 16V4m0 0L3 8m4-4l4 4m6 4v8m0 0l-4-4m4 4l4-4" />
-              </svg>
-              <p className="text-sm text-gray-500">
-                {imageFiles.length > 0
-                  ? `${imageFiles.length} image(s) selected`
-                  : (
-                    <>
-                      <span className="font-semibold text-indigo-600">Click to upload</span> or drag and drop
-                    </>
-                  )}
-              </p>
-              <p className="text-xs text-gray-400">PNG, JPG up to 5MB (Max 4 images)</p>
+      <Page className="container-mt-8 relative z-10 max-w-3xl">
+        <form onSubmit={handleSubmit} className="bg-white rounded-3xl border border-gray-100 shadow-xl shadow-gray-200/50 p-8 space-y-8">
+          <div className="space-y-6">
+            <h2 className="text-xl font-bold text-gray-900 border-b border-gray-50 pb-4">Product Details</h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <Input label="Product Name" name="name" value={form.name} onChange={handleChange} required placeholder="e.g. Handmade Ceramic Vase" />
+              <Input label="Category" name="category" value={form.category} onChange={handleChange} required placeholder="e.g. Home Decor" />
+              <Input label="Price ($)" name="price" type="number" value={form.price} onChange={handleChange} required placeholder="0.00" />
+              <Input label="Stock Quantity" name="stock" type="number" value={form.stock} onChange={handleChange} required placeholder="0" />
             </div>
-          </label>
-          {uploading && <p className="text-xs text-gray-500">Uploading...</p>}
-          {imageFiles.length > 0 ? (
-            <div className="flex flex-col gap-2 mt-2">
-              <div className="flex gap-2">
+
+            <div className="space-y-2">
+              <label className="text-sm font-semibold text-gray-700 ml-1">Description</label>
+              <textarea
+                name="description"
+                value={form.description}
+                onChange={handleChange}
+                placeholder="Describe your product's unique features, materials, and dimensions..."
+                className="w-full min-h-[120px] rounded-2xl bg-gray-50/50 border border-gray-200 px-4 py-3 text-sm focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
+                required
+              />
+            </div>
+
+            <div className="space-y-4">
+              <label className="text-sm font-semibold text-gray-700 ml-1">Product Images (Max 4)</label>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {imageFiles.map((it, idx) => (
-                  <div key={idx} className="relative">
-                    <img src={it.preview} className="w-20 h-20 object-cover rounded" />
+                  <div key={idx} className="relative aspect-square rounded-xl overflow-hidden bg-gray-100 group">
+                    <img src={it.preview} className="w-full h-full object-cover" />
                     <button
                       type="button"
-                      onClick={() =>
-                        setImageFiles(prev => prev.filter((_, i) => i !== idx))
-                      }
-                      className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center"
+                      onClick={() => setImageFiles(prev => prev.filter((_, i) => i !== idx))}
+                      className="absolute top-1 right-1 bg-white/90 backdrop-blur-sm text-rose-600 rounded-full w-6 h-6 flex items-center justify-center shadow-sm opacity-0 group-hover:opacity-100 transition-opacity"
                     >
                       ×
                     </button>
+                    {uploading && (
+                      <div className="absolute inset-0 bg-black/40 flex items-center justify-center p-2">
+                        <div className="w-full h-1.5 bg-white/20 rounded-full overflow-hidden">
+                          <div className="h-full bg-white transition-all duration-300" style={{ width: `${uploadProgress[idx] || 0}%` }} />
+                        </div>
+                      </div>
+                    )}
                   </div>
                 ))}
+                
+                {imageFiles.length < 4 && (
+                  <label className="aspect-square rounded-xl border-2 border-dashed border-gray-200 hover:border-indigo-400 hover:bg-indigo-50/30 transition-all cursor-pointer flex flex-col items-center justify-center gap-2">
+                    <input type="file" multiple onChange={handleImageUpload} className="hidden" />
+                    <span className="text-2xl text-gray-400">+</span>
+                    <span className="text-[10px] font-bold text-gray-500 uppercase tracking-tighter">Add Image</span>
+                  </label>
+                )}
               </div>
-              {uploadProgress.length > 0 && (
-                <div className="w-full">
-                  {uploadProgress.map((p, i) => (
-                    <div key={i} className="mb-2">
-                      <div className="text-sm">Image {i + 1} - {p}%</div>
-                      <div className="w-full bg-gray-200 h-2 rounded">
-                        <div className="bg-blue-500 h-2 rounded" style={{ width: `${p}%` }} />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
             </div>
-          ) : form.images.length > 0 ? (
-            <div className="flex gap-2 mt-2">
-              {form.images.map((url, idx) => (
-                <img key={idx} src={url} alt="preview" className="w-20 h-20 object-cover" />
-              ))}
-            </div>
-          ) : null}
-        </div>
-        <Button type="submit" className="w-full">
-          Submit
-        </Button>
-      </form>
+          </div>
+
+          <Button type="submit" disabled={uploading} className="w-full py-4 text-base font-bold shadow-xl shadow-indigo-600/20 rounded-2xl tracking-wide uppercase transition-all hover:scale-[1.01] active:scale-[0.99] disabled:scale-100">
+            {uploading ? "Uploading & Saving..." : "Publish Product →"}
+          </Button>
+        </form>
+      </Page>
     </div>
   );
 };

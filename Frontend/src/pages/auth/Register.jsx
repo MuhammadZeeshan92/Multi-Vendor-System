@@ -5,6 +5,9 @@ import { registerUser } from '../../features/auth/authSlice';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 
+import Page from '../../components/Page';
+import PageHeader from '../../components/PageHeader';
+
 const Register = () => {
   const dispatch = useDispatch();
   const { user, status, error } = useSelector((state) => state.auth);
@@ -37,13 +40,13 @@ const Register = () => {
   // (we don't redirect based on user here; registration always goes to login)
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center bg-gray-50 py-10">
+    <Page className="min-h-[calc(100vh-4rem)] flex items-center justify-center bg-gray-50 py-10">
       <div className="w-full max-w-md card p-6 space-y-6">
         <div className="space-y-1 text-center">
-          <h2 className="text-2xl font-semibold text-gray-900">Create your account</h2>
-          <p className="text-sm text-gray-600">
-            Join as a buyer or seller and start using the Marketplace.
-          </p>
+          <PageHeader
+            title="Create your account"
+            subtitle="Join as a buyer or seller and start using the Marketplace."
+          />
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
           <Input
@@ -96,7 +99,7 @@ const Register = () => {
           </Link>
         </p>
       </div>
-    </div>
+    </Page>
   );
 };
 

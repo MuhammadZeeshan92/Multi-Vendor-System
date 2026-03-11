@@ -5,24 +5,24 @@ const Vendor = require("../models/Vendor");
 const Buyer = require("../models/Buyer");
 
 async function buildUserPayload(user) {
-  const payload = {
-    _id: user._id,
-    name: user.name,
-    email: user.email,
-    role: user.role,
-  };
+    const payload = {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+    };
 
-  if (user.role === 'seller') {
-    const vendor = await Vendor.findOne({ user: user._id });
-    payload.hasCompletedProfile = !!vendor;
-    payload.vendor=vendor;
-  }
-  if (user.role === 'buyer') {
-    const buyer = await Buyer.findOne({ user: user._id });
-    payload.hasCompletedProfile = !!buyer;
-    payload.buyer=buyer;
-  }
-  return payload;
+    if (user.role === 'seller') {
+        const vendor = await Vendor.findOne({ user: user._id });
+        payload.hasCompletedProfile = !!vendor;
+        payload.vendor = vendor;
+    }
+    if (user.role === 'buyer') {
+        const buyer = await Buyer.findOne({ user: user._id });
+        payload.hasCompletedProfile = !!buyer;
+        payload.buyer = buyer;
+    }
+    return payload;
 }
 
 // Register

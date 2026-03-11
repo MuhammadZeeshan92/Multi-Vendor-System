@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
+import Page from '../../components/Page';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchProductById } from '../../features/products/productSlice';
 import { addItem } from '../../features/cart/cartSlice';
@@ -8,6 +9,7 @@ import Spinner from '../../components/Spinner';
 import Button from '../../components/Button';
 import VendorProfileCard from '../../components/VendorProfileCard';
 import MoreFromSellerCarousel from '../../components/MoreFromSellerCarousel';
+import PageHeader from '../../components/PageHeader';
 
 const formatCurrency = (value) => {
   if (typeof value !== 'number') return value;
@@ -97,7 +99,7 @@ const ProductDetail = () => {
   const ogImage = current.images?.[0];
 
   return (
-    <div className="container py-6 lg:py-8 space-y-10">
+    <Page className="container py-6 lg:py-8 space-y-10">
       <Helmet>
         <title>{pageTitle}</title>
         <meta
@@ -106,6 +108,7 @@ const ProductDetail = () => {
         />
         {ogImage && <meta property="og:image" content={ogImage} />}
       </Helmet>
+      <PageHeader title={current.name || 'Product'} />
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Gallery */}
         <div className="flex-1 space-y-4">
@@ -272,7 +275,7 @@ const ProductDetail = () => {
           </Button>
         </div>
       )}
-    </div>
+    </Page>
   );
 };
 

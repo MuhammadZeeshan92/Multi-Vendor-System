@@ -15,19 +15,49 @@
 	html, body, #root { height: 100%; }
 
 	body {
-		@apply bg-[var(--bg)] font-sans text-gray-700 antialiased;
+		@apply bg-[var(--bg)] font-sans text-gray-700 antialiased overflow-x-hidden custom-scrollbar;
 	}
 
-	a { @apply text-[var(--primary)] hover:underline; }
+	a { @apply text-[var(--primary)] hover:underline underline-offset-4; }
 	h1,h2,h3,h4 { color: #111827; }
+
+	/* Better default focus visibility */
+	:focus-visible { @apply outline-none ring-2 ring-indigo-500 ring-offset-2 ring-offset-[var(--bg)]; }
 }
 
 @layer components {
 	.container { @apply max-w-7xl mx-auto px-4 md:px-6; }
 
-	.hero { @apply bg-white rounded-xl shadow-md p-8 mb-8; }
+	/* Custom Scrollbar */
+	.hide-scrollbar {
+		scrollbar-width: none;
+		-ms-overflow-style: none;
+	}
+	.hide-scrollbar::-webkit-scrollbar {
+		display: none;
+	}
 
-	.card { @apply bg-[var(--card)] rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 overflow-hidden; }
+	.custom-scrollbar {
+		scrollbar-width: thin;
+		scrollbar-color: #6366f1 #f3f4f6;
+	}
+
+	.custom-scrollbar::-webkit-scrollbar {
+		height: 4px;
+		width: 4px;
+	}
+
+	.custom-scrollbar::-webkit-scrollbar-track {
+		@apply bg-gray-100 rounded-full;
+	}
+
+	.custom-scrollbar::-webkit-scrollbar-thumb {
+		@apply bg-indigo-500/30 rounded-full transition-colors hover:bg-indigo-500/60;
+	}
+
+	.hero { @apply bg-white rounded-2xl shadow-sm border border-gray-100 p-5 md:p-8 mb-8; }
+
+	.card { @apply bg-[var(--card)] rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 overflow-hidden; }
 
 	.btn-primary { @apply bg-[var(--primary)] text-white rounded-lg px-5 py-2 font-medium hover:bg-indigo-700 transition duration-200; }
 	.btn-ghost { @apply bg-white border border-gray-200 text-gray-800 rounded-lg px-4 py-2 hover:shadow-sm; }
@@ -35,4 +65,18 @@
 
 @layer utilities {
 	.scale-hover:hover { transform: scale(1.02); }
+
+	/* Lightweight motion tokens used by Page/PageHeader */
+	.animate-fadeIn { animation: fadeIn 280ms ease-out both; }
+	.animate-slideUp { animation: slideUp 320ms ease-out both; }
+
+	@keyframes fadeIn {
+		from { opacity: 0; transform: translateY(4px); }
+		to { opacity: 1; transform: translateY(0); }
+	}
+
+	@keyframes slideUp {
+		from { opacity: 0; transform: translateY(10px); }
+		to { opacity: 1; transform: translateY(0); }
+	}
 }

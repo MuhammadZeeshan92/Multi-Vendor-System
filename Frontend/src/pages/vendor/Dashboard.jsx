@@ -104,7 +104,7 @@ const VendorDashboard = () => {
           {/* Header + Logo Row */}
           <div className="flex items-center gap-4">
             {/* Logo */}
-            <div className="relative h-20 w-20 rounded-full border-4 border-gray-200 bg-gray-100 overflow-hidden flex-shrink-0 group">
+            <div className="mt-4 relative h-20 w-20 rounded-full border-4 border-gray-200 bg-gray-100 overflow-hidden flex-shrink-0 group">
               {vendor.logo ? (
                 <img src={vendor.logo} alt="Vendor logo" className="h-full w-full object-cover rounded-full" />
               ) : (
@@ -134,19 +134,19 @@ const VendorDashboard = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <div className="card p-4">
               <p className="text-xs font-semibold text-gray-500 uppercase mb-1">
-                Revenue (placeholder)
+                Revenue
               </p>
               <p className="text-2xl font-semibold text-gray-900">$ {vendor.totalRevenue?.toFixed(2) || '0.00'}</p>
             </div>
             <div className="card p-4">
               <p className="text-xs font-semibold text-gray-500 uppercase mb-1">
-                Orders (placeholder)
+                Orders
               </p>
               <p className="text-2xl font-semibold text-gray-900">{vendor.totalOrders || '0'}</p>
             </div>
             <div className="card p-4">
               <p className="text-xs font-semibold text-gray-500 uppercase mb-1">
-                Products (placeholder)
+                Products
               </p>
               <p className="text-2xl font-semibold text-gray-900">{vendor.totalProducts || '0'}</p>
             </div>

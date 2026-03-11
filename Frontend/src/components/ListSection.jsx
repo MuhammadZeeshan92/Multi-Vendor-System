@@ -7,27 +7,38 @@ export const ListSection = ({ title, data, currentPage, totalPages, onPageChange
     const dispatch = useDispatch();
     return (
         <div className="mb-10">
-            <h2 className="text-xl font-semibold mb-4">{title}</h2>
+            <div className="flex items-end justify-between gap-3 mb-4">
+                <div>
+                    <h2 className="text-lg font-semibold text-gray-900">{title}</h2>
+                    <p className="text-sm text-gray-600">Recent activity overview</p>
+                </div>
+                <div className="text-xs text-gray-500">
+                    Page <span className="font-semibold text-gray-900">{currentPage}</span> / {totalPages}
+                </div>
+            </div>
 
-            <div className="bg-white shadow rounded p-4">
+            <div className="card p-4">
                 {data.length === 0 ? (
-                    <p>No data available</p>
+                    <div className="text-center py-8">
+                        <p className="text-sm font-semibold text-gray-900">No data available</p>
+                        <p className="text-sm text-gray-600 mt-1">Try again later.</p>
+                    </div>
                 ) : (
                     data.map((item) => (
                         <div
                             key={item._id}
-                            className="border-b py-2 flex justify-between items-center"
+                            className="border-b border-gray-100 py-3 flex justify-between items-center gap-3 last:border-none"
                         >
                             <div className="flex flex-col">
-                                <span>{item.username}</span>
-                                <span className="text-sm text-gray-500">{item.email}</span>
+                                <span className="text-sm font-medium text-gray-900">{item.username}</span>
+                                <span className="text-xs text-gray-500">{item.email}</span>
                             </div>
 
                             <div className="flex gap-2 items-center">
 
                                 {/* If Blocked */}
                                 {item.isBlocked ? (
-                                    <span className="text-red-600 font-semibold">
+                                    <span className="text-red-600 font-semibold text-xs uppercase tracking-wide">
                                         Permanently Blocked
                                     </span>
                                 ) : (
@@ -41,7 +52,7 @@ export const ListSection = ({ title, data, currentPage, totalPages, onPageChange
                                                     dispatch(fetchActiveSellers({ page: currentPage, limit: 5 }));
                                                 }
                                             }}
-                                            className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700"
+                                            className="px-3 py-1.5 bg-red-600 text-white rounded-xl hover:bg-red-700 text-xs font-semibold shadow-sm"
                                         >
                                             Block
                                         </button>
@@ -54,23 +65,23 @@ export const ListSection = ({ title, data, currentPage, totalPages, onPageChange
                 )}
 
                 {/* PAGINATION BUTTONS */}
-                <div className="flex justify-center mt-4 gap-2">
+                <div className="flex justify-center mt-4 gap-2 text-sm">
                     <button
                         disabled={currentPage === 1}
                         onClick={() => onPageChange(currentPage - 1)}
-                        className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+                        className="px-3 py-1.5 bg-white border border-gray-200 rounded-xl disabled:opacity-50 hover:bg-gray-50"
                     >
                         Prev
                     </button>
 
-                    <span className="px-3 py-1">
+                    <span className="px-3 py-1.5 text-gray-600">
                         {currentPage} / {totalPages}
                     </span>
 
                     <button
                         disabled={currentPage === totalPages}
                         onClick={() => onPageChange(currentPage + 1)}
-                        className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+                        className="px-3 py-1.5 bg-white border border-gray-200 rounded-xl disabled:opacity-50 hover:bg-gray-50"
                     >
                         Next
                     </button>
