@@ -208,7 +208,7 @@ const ProductDetail = () => {
             </div>
           </div>
 
-          <VendorProfileCard vendor={vendor} />
+          {/* <VendorProfileCard vendor={vendor} /> */}
         </div>
       </div>
 

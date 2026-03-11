@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 // Create Product (Vendor only)
 exports.createProduct = async (req, res) => {
   try {
-    const { name, description, price, stock, images } = req.body;
+    const { name, description, price,category, stock, images } = req.body;
 
     const vendor = await Vendor.findOne({ user: req.user._id });
     if (!vendor) {
@@ -19,6 +19,7 @@ exports.createProduct = async (req, res) => {
       name,
       description,
       price,
+      category,
       stock,
       images,
       vendor: req.user._id,

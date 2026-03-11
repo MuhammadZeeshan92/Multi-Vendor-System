@@ -12,8 +12,8 @@ const VendorDashboard = () => {
   console.log(authUser)
 
   useEffect(() => {
-    if (authUser?._id) {
-      dispatch(fetchVendorProfile(authUser.vendor._id));
+    if (authUser?.vendor?._id) {
+      dispatch(fetchVendorProfile(authUser?.vendor?._id));
     }
   }, [dispatch, authUser]);
 

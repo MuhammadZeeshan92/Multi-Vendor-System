@@ -69,7 +69,6 @@ exports.getVendorProducts = async (req, res) => {
     const skip = (page - 1) * limit;
 
     const total = await Product.countDocuments({ vendor: id });
-    console.log("Id",id,"Total products", total)
 
     const vendor = await Vendor.findById({ _id: id })
 

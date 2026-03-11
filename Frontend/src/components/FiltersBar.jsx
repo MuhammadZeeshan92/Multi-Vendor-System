@@ -122,7 +122,7 @@ const FiltersBar = ({ filters, onChange, vendors = [] }) => {
       {/* Vendor chips */}
       {vendors.length > 0 && (
         <div className="flex items-center gap-2">
-          <span className="text-xs text-gray-500 whitespace-nowrap">Filter by vendor</span>
+          <span className="text-xs text-gray-500 whitespace-nowrap">All Vendor</span>
           <div className="flex gap-2 overflow-x-auto pb-1">
             {vendors.map((v) => {
               const active = filters.vendor === v._id;
