@@ -10,7 +10,6 @@ const BuyerLayout = () => {
     { to: '/buyer/dashboard', label: 'Dashboard' },
     { to: '/buyer/orders',    label: 'My Orders' },
     { to: '/buyer/vendors',   label: 'Followed Vendors' },
-    { to: '/buyer/settings',  label: 'Settings' },
   ];
 
   return (

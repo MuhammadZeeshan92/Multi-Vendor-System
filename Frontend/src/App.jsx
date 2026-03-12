@@ -39,7 +39,7 @@ import BuyerOrders from './pages/buyers/Orders';
 import FollowedVendors from './pages/buyers/FollowedVendors';
 // import Wishlist from './pages/buyer/Wishlist';
 // import BuyerReviews from './pages/buyer/Reviews';
-import BuyerSettings from './pages/buyers/Settings';
+// import BuyerSettings from './pages/buyers/Settings';
 import CreateStore from './pages/vendor/CreateStore';
 import CompleteProfile from './pages/buyers/CompleteProfile';
 
@@ -84,7 +84,7 @@ function App() {
                   <Route path="/buyer/vendors" element={<FollowedVendors />} />
                   {/* <Route path="wishlist" element={<Wishlist />} />
               <Route path="reviews" element={<BuyerReviews />} /> */}
-                  <Route path="/buyer/settings" element={<BuyerSettings />} />
+                  {/* <Route path="/buyer/settings" element={<BuyerSettings />} /> */}
                 </Route>
               </Route>
             </Route>
