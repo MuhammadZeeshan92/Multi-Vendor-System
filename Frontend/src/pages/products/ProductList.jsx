@@ -34,44 +34,8 @@ const ProductList = () => {
   }, [dispatch, filters]);
 
 
-  const allProducts = useSelector((s) => s.products.list);
-
-const filtered = React.useMemo(() => {
-  return allProducts.filter((p) => {
-    if (filters.search && !p.name.match(new RegExp(filters.search, 'i'))) return false;
-    if (filters.category && p.category !== filters.category) return false;
-    // if (filters.vendor) {
-    //     const vid = typeof p.vendor === 'string'
-    //       ? p.vendor
-    //       : p.vendor?._id;
-    //     if (vid !== filters.vendor) return false;
-    //   }
-    if (filters.minPrice && p.price < filters.minPrice) return false;
-    if (filters.maxPrice && p.price > filters.maxPrice) return false;
-    return true;
-  }).sort((a, b) => {
-    // add sort logic based on filters.sort
-    if (!filters.sort) return 0;
-    const dir = filters.sort.startsWith('-') ? -1 : 1;
-    const key = filters.sort.replace(/^-/, '');
-    return dir * (a[key] > b[key] ? 1 : a[key] < b[key] ? -1 : 0);
-  });
-}, [allProducts, filters]);
-
-const paginated = React.useMemo(() => {
-  const start = (filters.page - 1) * filters.limit;
-  return filtered.slice(start, start + filters.limit);
-}, [filtered, filters.page, filters.limit]);
-
-const localPagination = {
-  total: filtered.length,
-  page: filters.page,
-  pages: Math.ceil(filtered.length / filters.limit),
-  limit: filters.limit,
-};
-
   useEffect(() => {
-    // ensure we have vendors for chips
+    // only fetch if we don't have vendors or to ensure we have them
     dispatch(fetchPublicVendors({ featured: true, limit: 24 }));
   }, [dispatch]);
 
@@ -102,12 +66,14 @@ const localPagination = {
 
       <FiltersBar filters={filters} onChange={handleFiltersChange} vendors={vendors} />
 
-      <ProductGrid products={paginated || []} />
+      <ProductGrid products={list || []} />
 
-      <Pagination
-        pagination={localPagination}
-        onPageChange={(p) => setFilters({ ...filters, page: p })}
-      />
+      {pagination && pagination.pages > 1 && (
+        <Pagination
+          pagination={pagination}
+          onPageChange={(p) => setFilters({ ...filters, page: p })}
+        />
+      )}
     </Page>
   );
 };

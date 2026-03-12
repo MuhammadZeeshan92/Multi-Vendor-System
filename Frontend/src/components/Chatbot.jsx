@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import api from '../utils/api';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 const Chatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -8,6 +10,7 @@ const Chatbot = () => {
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [showSuggestions, setShowSuggestions] = useState(true);
   const scrollRef = useRef(null);
 
   useEffect(() => {
@@ -28,6 +31,7 @@ const Chatbot = () => {
     try {
       const resp = await api.post('/chat', { messages: [...messages, userMessage].slice(-10) }); // Keep context short
       setMessages((prev) => [...prev, resp.data]);
+      setShowSuggestions(false);
     } catch (err) {
       console.error(err);
       setMessages((prev) => [...prev, { role: 'assistant', content: 'Sorry, I encountered an error. Please try again later.' }]);
@@ -35,6 +39,17 @@ const Chatbot = () => {
       setIsLoading(false);
     }
   };
+
+  const handleSuggestionClick = (q) => {
+    setInput(q);
+    setShowSuggestions(false);
+  };
+
+  const suggestedQuestions = [
+    "can you tell me about the developer?",
+    "can you tell me about this platform in detail?",
+    "can you provide any dummy credentials to login?",
+  ];
 
   return (
     <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end">
@@ -56,12 +71,16 @@ const Chatbot = () => {
           <div ref={scrollRef} className="h-80 overflow-y-auto p-4 space-y-4 bg-gray-50/50">
             {messages.map((msg, i) => (
               <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                <div className={`max-w-[80%] p-3 rounded-2xl text-sm ${
+                <div className={`max-w-[80%] p-3 rounded-2xl text-sm break-words ${
                   msg.role === 'user' 
                   ? 'bg-indigo-600 text-white rounded-br-none shadow-md' 
                   : 'bg-white text-gray-800 rounded-bl-none shadow-sm border border-gray-100'
                 }`}>
-                  {msg.content}
+                  <div className="prose prose-sm max-w-none">
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                      {msg.content}
+                    </ReactMarkdown>
+                  </div>
                 </div>
               </div>
             ))}
@@ -75,6 +94,21 @@ const Chatbot = () => {
               </div>
             )}
           </div>
+
+          {showSuggestions && messages.length <= 1 && (
+            <div className="px-4 py-3 border-t border-gray-50 flex flex-wrap gap-2 bg-white/80 backdrop-blur-sm animate-fadeIn">
+              <p className="w-full text-[10px] text-gray-400 font-medium mb-1 uppercase tracking-wider">Suggested Questions</p>
+              {suggestedQuestions.map((q, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => handleSuggestionClick(q)}
+                  className="text-[11px] sm:text-xs bg-indigo-50/50 border border-indigo-100/50 text-indigo-600 px-3 py-1.5 rounded-full hover:bg-indigo-600 hover:text-white hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 text-left active:scale-95 font-medium"
+                >
+                  {q}
+                </button>
+              ))}
+            </div>
+          )}
 
           <form onSubmit={handleSend} className="p-4 border-t border-gray-100 bg-white">
             <div className="flex gap-2">

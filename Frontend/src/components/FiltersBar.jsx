@@ -1,12 +1,28 @@
 import React, { useState, useEffect } from 'react';
 
-const defaultCategories = ['All', 'Furniture', 'Decor', 'Electronics', 'Fashion'];
+const defaultCategories = [
+  'All',
+  'Electronics',
+  'Fashion',
+  'Home & Living',
+  'Furniture',
+  'Decor',
+  'Beauty & Personal Care',
+  'Sports & Outdoors',
+  'Groceries',
+  'Automotive',
+  'Books & Stationery',
+  'Baby & Kids',
+  'Health & Wellness',
+  'Pet Supplies'
+];
 
 const FiltersBar = ({ filters, onChange, vendors = [] }) => {
   const [search, setSearch] = useState(filters.search || '');
 
   // debounce search input -> notify parent after 300ms
   useEffect(() => {
+    if (search === (filters.search || '')) return;
     const id = setTimeout(() => {
       onChange({ ...filters, search, page: 1 });
     }, 300);

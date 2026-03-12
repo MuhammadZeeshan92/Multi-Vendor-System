@@ -139,7 +139,35 @@ const AddProduct = () => {
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Input label="Product Name" name="name" value={form.name} onChange={handleChange} required placeholder="e.g. Handmade Ceramic Vase" />
-              <Input label="Category" name="category" value={form.category} onChange={handleChange} required placeholder="e.g. Home Decor" />
+              <div className="flex flex-col gap-1">
+                <label className="text-sm font-medium text-gray-700">Category</label>
+                <select
+                  name="category"
+                  value={form.category}
+                  onChange={handleChange}
+                  required
+                  className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white"
+                >
+                  <option value="" disabled>Select a category</option>
+                  {[
+                    'Electronics',
+                    'Fashion',
+                    'Home & Living',
+                    'Furniture',
+                    'Decor',
+                    'Beauty & Personal Care',
+                    'Sports & Outdoors',
+                    'Groceries',
+                    'Automotive',
+                    'Books & Stationery',
+                    'Baby & Kids',
+                    'Health & Wellness',
+                    'Pet Supplies'
+                  ].map(cat => (
+                    <option key={cat} value={cat}>{cat}</option>
+                  ))}
+                </select>
+              </div>
               <Input label="Price ($)" name="price" type="number" value={form.price} onChange={handleChange} required placeholder="0.00" />
               <Input label="Stock Quantity" name="stock" type="number" value={form.stock} onChange={handleChange} required placeholder="0" />
             </div>

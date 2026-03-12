@@ -67,13 +67,19 @@ const productSlice = createSlice({
       })
       .addCase(fetchProducts.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        // ensure we always have an array even if backend response shape is unexpected
+        // Handle both simple array and structured paginated object
         if (Array.isArray(action.payload)) {
           state.list = action.payload;
+          state.pagination = {
+            total: action.payload.length,
+            page: 1,
+            pages: 1,
+            limit: action.payload.length
+          };
         } else {
           state.list = action.payload.products || [];
+          state.pagination = action.payload.pagination || null;
         }
-        state.pagination = (action.payload && action.payload.pagination) || null;
       })
       .addCase(fetchProducts.rejected, (state, action) => {
         state.status = 'failed';

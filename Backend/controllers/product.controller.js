@@ -34,9 +34,66 @@ exports.createProduct = async (req, res) => {
 // Get All Products (Public)
 exports.getAllProducts = async (req, res) => {
   try {
-    const products = await Product.find().populate("vendor", "name email");
+    const { 
+      search, 
+      category, 
+      vendor, 
+      minPrice, 
+      maxPrice, 
+      sort, 
+      page = 1, 
+      limit = 12 
+    } = req.query;
 
-    res.json(products);
+    const query = {};
+
+    // Search filter
+    if (search) {
+      query.name = { $regex: search, $options: "i" };
+    }
+
+    // Category filter
+    if (category) {
+      query.category = category;
+    }
+
+    // Vendor filter
+    if (vendor) {
+      query.vendor = vendor;
+    }
+
+    // Price range filter
+    if (minPrice || maxPrice) {
+      query.price = {};
+      if (minPrice) query.price.$gte = Number(minPrice);
+      if (maxPrice) query.price.$lte = Number(maxPrice);
+    }
+
+    // Sorting
+    let sortStr = "-createdAt";
+    if (sort) {
+      sortStr = sort.replace(",", " ");
+    }
+
+    // Pagination
+    const skip = (Number(page) - 1) * Number(limit);
+    
+    const count = await Product.countDocuments(query);
+    const products = await Product.find(query)
+      .populate("vendor", "name email logo")
+      .sort(sortStr)
+      .skip(skip)
+      .limit(Number(limit));
+
+    res.json({
+      products,
+      pagination: {
+        total: count,
+        page: Number(page),
+        pages: Math.ceil(count / Number(limit)),
+        limit: Number(limit),
+      },
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

@@ -15,6 +15,21 @@ const productSchema = new mongoose.Schema(
     category: {
       type: String,
       required: true,
+      enum: [
+        'Electronics',
+        'Fashion',
+        'Home & Living',
+        'Furniture',
+        'Decor',
+        'Beauty & Personal Care',
+        'Sports & Outdoors',
+        'Groceries',
+        'Automotive',
+        'Books & Stationery',
+        'Baby & Kids',
+        'Health & Wellness',
+        'Pet Supplies'
+      ]
     },
 
     price: {
