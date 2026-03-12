@@ -24,6 +24,8 @@ const AdminDashboard = () => {
   const [userPage, setUserPage] = useState(1);
   const [sellerPage, setSellerPage] = useState(1);
 
+  console.log(dashboard);
+
   // Fetch dashboard stats once
   useEffect(() => {
     dispatch(fetchDashboard());
@@ -65,12 +67,12 @@ const AdminDashboard = () => {
 
       {/* STATS GRID */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        <StatCard title="Total Users" value={dashboard.totalUsers} />
-        <StatCard title="Total Vendors" value={dashboard.totalVendors} />
-        <StatCard title="Active Users" value={dashboard.activeUsers} />
-        <StatCard title="Active Vendors" value={dashboard.activeVendors} />
-        <StatCard title="Blocked Accounts" value={dashboard.blockedUsers} />
-        <StatCard title="Revenue" value={`$${dashboard.revenue}`} />
+        <StatCard title="Total Users" value={dashboard?.totalUsers} />
+        <StatCard title="Total Vendors" value={dashboard?.totalVendors} />
+        <StatCard title="Active Users" value={dashboard?.activeUsers} />
+        <StatCard title="Active Vendors" value={dashboard?.activeVendors} />
+        <StatCard title="Blocked Accounts" value={dashboard?.blockedUsers} />
+        <StatCard title="Revenue" value={`$${dashboard?.commision?.amount}`} />
       </div>
 
       {/* ACTIVE USERS */}

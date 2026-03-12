@@ -23,6 +23,9 @@ exports.getDashboardStats = async (req, res) => {
       isBlocked: true,
     });
 
+    const admin = await Admin.findOne();
+    const commission = admin.commission;
+
 
     res.json({
       totalUsers,
@@ -31,7 +34,7 @@ exports.getDashboardStats = async (req, res) => {
       activeVendors,
       blockedUsers,
       revenue: 0,      // placeholder
-      commission: 0,   // placeholder
+      commission: commission,   // placeholder
     });
   } catch (err) {
     res.status(500).json({ message: err.message });
