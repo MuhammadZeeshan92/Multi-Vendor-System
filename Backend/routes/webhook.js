@@ -47,27 +47,36 @@ router.post('/stripe-webhook', express.raw({ type: 'application/json' }), async 
 
         // Deduct stock
         for (const oi of order.orderItems) {
-          await Product.findByIdAndUpdate(oi.product, { $inc: { stock: -oi.quantity }});
+          await Product.findByIdAndUpdate(oi.product, { $inc: { stock: -oi.quantity } });
         }
 
-        let adminRevenue=0;
+        let adminRevenue = 0;
 
         for (const oi of order.orderItems) {
-          const vendor = await Vendor.findOne({user: oi.vendor});
+          const vendor = await Vendor.findOne({ user: oi.vendor });
           if (vendor) {
-            vendor.totalRevenue += oi.price - (oi.quantity*10);
+            vendor.totalRevenue += oi.price - (oi.quantity * 10);
             vendor.totalOrders += 1;
-            adminRevenue+=10;
+            adminRevenue += 10;
             await vendor.save();
           }
         }
 
-        await Admin.findOneAndUpdate({}, {
-          $inc: {
-            revenue: adminRevenue,
+        await Admin.findOneAndUpdate(
+          {},
+          {
+            $inc: {
+              revenue: adminRevenue,
+            },
+            $push: {
+              commission: {
+                date: new Date(),
+                amount: adminRevenue,
+              },
+            },
           }
-        });
-        
+        );
+
 
         // Notify vendor(s) - placeholder
         // e.g. notifyVendors(order);

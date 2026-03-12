@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const User = require("./models/User");
+const Admin = require("./models/Admin");
 
 require("dotenv").config();
 
@@ -17,13 +18,21 @@ const seedAdmin = async () => {
 
     const hashedPassword = await bcrypt.hash("Admin@123", 10);
 
-    const admin = new User({
+    const adminUser = new User({
       name: "Super Admin",
       email: "admin@multivendor.com",
       password: hashedPassword,
       role: "admin",
       isActive: true,
     });
+
+    await adminUser.save();
+
+    const admin = new Admin({
+      user: adminUser._id,
+      revenue: 0,
+      commission: [],
+    })
 
     await admin.save();
 

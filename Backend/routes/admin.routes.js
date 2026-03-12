@@ -8,6 +8,7 @@ const {
   getActiveUsers,
   getActiveSellers,
   blockUser,
+  getCommission,
 } = require("../controllers/admin.controller");
 
 const { protect, authorizeRoles } = require("../middleware/auth.middleware");
@@ -22,5 +23,6 @@ router.get("/active-users", protect, authorizeRoles("admin"), getActiveUsers);
 router.get("/active-sellers", protect, authorizeRoles("admin"), getActiveSellers);
 
 router.put("/users/:id/block", protect, authorizeRoles("admin"), blockUser);
+router.get("/commission", protect, authorizeRoles("admin"), getCommission);
 
 module.exports = router;

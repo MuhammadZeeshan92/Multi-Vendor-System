@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const Admin = require("../models/Admin");
 
 // ✅ Admin Dashboard Metrics
 exports.getDashboardStats = async (req, res) => {
@@ -168,6 +169,50 @@ exports.blockUser = async (req, res) => {
 
     res.json(user);
   } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+exports.getCommission = async (req, res) => {
+  try {
+    const { start, end } = req.query;
+    let admin = await Admin.findOne();
+
+    if (!admin) {
+      return res.json([]);
+    }
+
+    let selectedArray = [];
+    const commissionData = admin.commission || [];
+
+    // Filter using requested style: map and selected array
+    commissionData.map((c) => {
+      const cDate = new Date(c.date);
+      let isWithinRange = true;
+
+      if (start && new Date(start) > cDate) {
+        isWithinRange = false;
+      }
+      
+      if (end) {
+        const endDate = new Date(end);
+        endDate.setHours(23, 59, 59, 999);
+        if (cDate > endDate) {
+          isWithinRange = false;
+        }
+      }
+
+      if (isWithinRange) {
+        selectedArray.push(c);
+      }
+    });
+
+    // Sort by date descending (newest first)
+    selectedArray.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    res.json(selectedArray);
+  } catch (error) {
+    console.error("getCommission error:", error);
     res.status(500).json({ message: error.message });
   }
 };

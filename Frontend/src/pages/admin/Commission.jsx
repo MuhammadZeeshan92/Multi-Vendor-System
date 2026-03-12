@@ -7,7 +7,6 @@ const Commission = () => {
   const dispatch = useDispatch();
   const { commission, status } = useSelector((state) => state.admin);
   const [filters, setFilters] = useState({ start: '', end: '' });
-
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(fetchCommissionReport(filters));
@@ -69,12 +68,28 @@ const Commission = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-              {commission.map((c, idx) => (
-                <tr key={idx} className="hover:bg-gray-50/60 transition-colors">
-                  <td className="px-4 py-3 text-gray-700">{c.date}</td>
-                  <td className="px-4 py-3 font-semibold text-gray-900">${c.amount}</td>
+              {commission.length > 0 ? (
+                commission.map((c, idx) => (
+                  <tr key={idx} className="hover:bg-gray-50/60 transition-colors">
+                    <td className="px-4 py-3 text-gray-700">
+                      {new Date(c.date).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                      })}
+                    </td>
+                    <td className="px-4 py-3 font-semibold text-gray-900">Rs {c.amount.toLocaleString()}</td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="2" className="px-4 py-10 text-center text-gray-500">
+                    No commission records found for the selected range.
+                  </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
           </div>

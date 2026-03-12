@@ -39,26 +39,92 @@ function EditProductModal({ product, onClose, onSaved }) {
   if (!product) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-6 w-full max-w-lg">
-        <h2 className="text-xl font-semibold mb-4">Edit product</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <input name="name" value={form.name} onChange={handleChange} required
-                 className="w-full border px-2 py-1"/>
-          <textarea name="description" value={form.description}
-                    onChange={handleChange} className="w-full border px-2 py-1"/>
-          <input name="price" type="number" value={form.price} onChange={handleChange}
-                 className="w-full border px-2 py-1" required/>
-          <input name="category" value={form.category} onChange={handleChange}
-                 className="w-full border px-2 py-1"/>
-          <input name="stock" type="number" value={form.stock} onChange={handleChange}
-                 className="w-full border px-2 py-1"/>
-          <div className="flex justify-end gap-2">
-            <button type="button" onClick={onClose}
-                    className="px-4 py-2 bg-gray-200 rounded">Cancel</button>
-            <button type="submit"
-                    className="px-4 py-2 bg-indigo-600 text-white rounded">
-              Save
+    <div className="fixed inset-0 bg-gray-900/40 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fadeIn">
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden animate-slideUp">
+        <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+          <h2 className="text-xl font-bold text-gray-900">Edit Product</h2>
+          <button 
+            onClick={onClose}
+            className="text-gray-400 hover:text-gray-600 transition-colors p-1"
+          >
+            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="p-6 space-y-5">
+          <div className="space-y-1">
+            <label className="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">Product Name</label>
+            <input 
+              name="name" 
+              value={form.name} 
+              onChange={handleChange} 
+              required
+              placeholder="e.g. Premium Wireless Headphones"
+              className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all bg-gray-50/30"
+            />
+          </div>
+
+          <div className="space-y-1">
+            <label className="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">Description</label>
+            <textarea 
+              name="description" 
+              value={form.description}
+              onChange={handleChange} 
+              rows={3}
+              placeholder="Tell us about the product..."
+              className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all bg-gray-50/30 resize-none"
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-1">
+              <label className="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">Price (Rs)</label>
+              <input 
+                name="price" 
+                type="number" 
+                value={form.price} 
+                onChange={handleChange}
+                required
+                className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all bg-gray-50/30"
+              />
+            </div>
+            <div className="space-y-1">
+              <label className="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">Stock Activity</label>
+              <input 
+                name="stock" 
+                type="number" 
+                value={form.stock} 
+                onChange={handleChange}
+                className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all bg-gray-50/30"
+              />
+            </div>
+          </div>
+
+          <div className="space-y-1">
+            <label className="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">Category</label>
+            <input 
+              name="category" 
+              value={form.category} 
+              onChange={handleChange}
+              className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all bg-gray-50/30"
+            />
+          </div>
+
+          <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
+            <button 
+              type="button" 
+              onClick={onClose}
+              className="px-6 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl text-sm font-semibold transition-colors"
+            >
+              Cancel
+            </button>
+            <button 
+              type="submit"
+              className="px-8 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-bold shadow-lg shadow-indigo-500/20 transition-all active:scale-95"
+            >
+              Save Changes
             </button>
           </div>
         </form>
