@@ -92,7 +92,9 @@ const AddProduct = () => {
           setUploading(false);
           return;
         }
-        const sigResp = await api.get('/cloudinary-signature');
+        const sigResp = await api.get('/cloudinary-signature', {
+          withCredentials: true
+        });
         const sigParams = sigResp.data;
         const uploadPromises = imageFiles.map(({ file }, idx) =>
           uploadFileWithProgress(file, sigParams, (p) => {
@@ -126,8 +128,8 @@ const AddProduct = () => {
 
   return (
     <div className="bg-gray-50/50 min-h-screen pb-12">
-      <PageHero 
-        title="Add Product" 
+      <PageHero
+        title="Add Product"
         subtitle="Bring your products to life. High-quality images and clear descriptions help you sell faster."
         gradient="from-violet-600 via-indigo-700 to-blue-800"
       />
@@ -136,7 +138,7 @@ const AddProduct = () => {
         <form onSubmit={handleSubmit} className="bg-white rounded-3xl border border-gray-100 shadow-xl shadow-gray-200/50 p-8 space-y-8">
           <div className="space-y-6">
             <h2 className="text-xl font-bold text-gray-900 border-b border-gray-50 pb-4">Product Details</h2>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Input label="Product Name" name="name" value={form.name} onChange={handleChange} required placeholder="e.g. Handmade Ceramic Vase" />
               <div className="flex flex-col gap-1">
@@ -206,7 +208,7 @@ const AddProduct = () => {
                     )}
                   </div>
                 ))}
-                
+
                 {imageFiles.length < 4 && (
                   <label className="aspect-square rounded-xl border-2 border-dashed border-gray-200 hover:border-indigo-400 hover:bg-indigo-50/30 transition-all cursor-pointer flex flex-col items-center justify-center gap-2">
                     <input type="file" multiple onChange={handleImageUpload} className="hidden" />
