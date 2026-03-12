@@ -86,7 +86,9 @@ const Commission = () => {
               ) : (
                 <tr>
                   <td colSpan="2" className="px-4 py-10 text-center text-gray-500">
-                    No commission records found for the selected range.
+                    No commission records found for the selected range,
+                    <br />
+                    Click Apply filter to get the commission report without any filter.
                   </td>
                 </tr>
               )}
