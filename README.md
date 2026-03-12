@@ -2,6 +2,8 @@
 
 A comprehensive MERN stack (MongoDB, Express, React, Node.js) multi-vendor marketplace platform. This system allows independent sellers to create their own stores, manage products, and handle sales, while providing buyers with a seamless shopping experience featuring secure checkout via Stripe and AI-powered assistance.
 
+---
+
 ## 1. Project Overview
 This project is a multi-tenant e-commerce platform designed to facilitate transactions between multiple vendors and customers. It features:
 - **Three-Tier User Roles**: Admin, Seller (Vendor), and Buyer.
@@ -16,6 +18,51 @@ This project is a multi-tenant e-commerce platform designed to facilitate transa
 
 ## 2. Tech Stack
 
+### Frontend
+- **React.js (Vite)**: Modern frontend library and build tool.
+- **Redux Toolkit**: Centralized state management for auth, cart, and shop data.
+- **Tailwind CSS**: Utility-first CSS framework for premium UI design.
+- **React Router Dom**: Client-side routing with role-based guards.
+
+### Backend
+- **Node.js & Express.js**: Server-side runtime and web framework.
+- **MongoDB & Mongoose**: NoSQL database and Object Data Modeling (ODM).
+- **JWT (JSON Web Token)**: Secure authentication and session management.
+- **Stripe API**: Payment processing and webhook handling.
+- **Cloudinary**: Cloud-based image management for product and profile media.
+- **OpenRouter API**: Powering the system's AI chatbot.
+
+---
+
+## 3. Project Structure
+
+```text
+multiVendorSystem/
+├── Backend/                # Express API
+│   ├── config/             # DB connection & global configs
+│   ├── controllers/        # Business logic for all modules
+│   ├── middleware/         # Auth, Authorization & error handlers
+│   ├── models/             # Mongoose Schemas (User, Vendor, Product, etc.)
+│   ├── routes/             # API route definitions
+│   ├── seedAdmin.js        # Script to initialize admin user
+│   └── server.js           # Server entry point
+├── Frontend/               # React Application
+│   ├── src/
+│   │   ├── app/            # Redux store setup
+│   │   ├── components/     # UI components (Navbar, Sidebar, ProductCard, etc.)
+│   │   ├── features/       # Redux slices logic (authSlice, productSlice, etc.)
+│   │   ├── layouts/        # Role-specific layouts (Admin, Vendor, Buyer)
+│   │   ├── pages/          # All view components
+│   │   ├── routes/         # Protected and Role-based route guards
+│   │   ├── utils/          # API helpers and constants
+│   └── tailwind.config.js  # Styling system configuration
+└── README.md
+```
+
+---
+
+## 4. Architecture Overview
+
 ### Core Technologies
 - **Frontend**: [React.js](https://reactjs.org/) (Vite), [Redux Toolkit](https://redux-toolkit.js.org/) for state management.
 - **Backend**: [Node.js](https://nodejs.org/), [Express.js](https://expressjs.com/).
@@ -29,118 +76,145 @@ This project is a multi-tenant e-commerce platform designed to facilitate transa
 - **AI**: [OpenRouter API](https://openrouter.ai/).
 - **Other**: Axios (API requests), React Router Dom (Navigation), React Toastify (Notifications).
 
----
+### MVC Pattern
+The backend adheres to a strict MVC (Model-View-Controller) pattern, ensuring clean separation of data, logic, and routing.
 
-## 3. Project Structure
-
-```text
-multiVendorSystem/
-├── Backend/                # Express API
-│   ├── config/             # Database connection & configurations
-│   ├── controllers/        # Business logic for endpoints
-│   ├── middleware/         # Authentication & authorization logic
-│   ├── models/             # Mongoose schemas (User, Vendor, Product, etc.)
-│   ├── routes/             # API route definitions
-│   ├── .env                # Backend environment variables
-│   └── server.js           # Main entry point
-├── Frontend/               # React Application
-│   ├── src/
-│   │   ├── app/            # Redux store configuration
-│   │   ├── components/     # Reusable UI components
-│   │   ├── features/       # Redux slices (auth, products, cart, etc.)
-│   │   ├── layouts/        # Page layouts (Admin, Vendor, Buyer)
-│   │   ├── pages/          # Application pages/views
-│   │   ├── routes/         # Routing logic and guards
-│   │   └── utils/          # API helper (Axios instance)
-│   ├── .env                # Frontend environment variables
-│   └── tailwind.config.js  # Styling configuration
-└── README.md
-```
-
----
-
-## 4. Architecture Overview
-
-### System Design
-The application follows a standard **MERN** architecture:
-1.  **Frontend**: A SPA (Single Page Application) built with React that communicates with the backend via RESTful APIs.
-2.  **State Management**: Redux Toolkit manages global states like user authentication, cart items, and product listings.
-3.  **Backend**: An Express server handles routing, business logic, and interacts with MongoDB.
-4.  **Data Flow**:
-    -   Requests are sent from React using Axios.
-    -   Backend validates requests using custom middleware (Auth/Role).
-    -   Controllers process data and interact with MongoDB via Mongoose.
-    -   Responses are returned as JSON.
+### Data Flow
+1.  **Client Request**: Frontend sends an Axios request to the REST API.
+2.  **Middleware**: `protect` middleware validates the JWT from cookies; `authorizeRoles` checks permissions.
+3.  **Controller**: Executes business logic (e.g., creating a product, processing a payment).
+4.  **Database**: Interacts with MongoDB via Mongoose models.
+5.  **Response**: Returns structured JSON to the client.
 
 ---
 
 ## 5. Frontend Documentation
 
-### Navigation & Routing
-Uses `react-router-dom` with role-based access control:
--   **Public Routes**: Home, Products, Vendor Storefronts, Login, Register.
--   **Protected Routes**:
-    -   `BuyerLayout`: Dashboard, Orders, Completed Profile.
-    -   `VendorLayout`: Dashboard, Product Management, Sales Tracking.
-    -   `AdminLayout`: User Management, Commission Tracking, Vendor Management.
+### Navigation & Role-Based Routing
+The application uses `React Router` with custom guards to control access:
+- **Public**: Home, Product Discovery, Vendor Profiles, Authentication.
+- **ProtectedRoute**: Ensures the user is logged in.
+- **RoleRoute**: Restricted access based on roles:
+    - **Buyer**: Dashboard, Order History, Followed Vendors.
+    - **Seller (Vendor)**: Store Management, Product Creation, Sales Analytics.
+    - **Admin**: System-wide User/Vendor management, Revenue stats.
 
-### Important UI Logic
--   **Infinite Scroll/Pagination**: Implemented in product listings.
--   **Interactive Components**: Carousels for featured vendors and top products.
--   **Toast Notifications**: Global alert system for success/error feedback.
+### Core Layouts
+- **BuyerLayout**: Sidebar-driven navigation for customer account management.
+- **VendorLayout**: Modern dashboard layout with sales and inventory tools.
+- **AdminLayout**: High-level system overview and management interface.
+
+### State Management (Redux)
+- **authSlice**: Manages user session, login/logout, and profile state.
+- **productSlice**: Handles global product listing, filtering, and detail views.
+- **cartSlice**: Client-side cart logic with session storage persistence.
+- **orderSlice**: Manages order creation and tracking.
+- **vendorSlice**: Handles vendor registration and storefront data.
+- **adminSlice**: Manages system users and global stats.
 
 ---
 
-## 6. Backend Documentation
+## 6. Backend Documentation (Complete API Reference)
 
-### Key API Endpoints
-| Method | Route | Description | Auth Required |
+### 🔑 Authentication (`/api/auth`)
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| **POST** | `/register` | Register a new user (Buyer/Seller) |
+| **POST** | `/login` | Authenticate user and set JWT cookie |
+| **POST** | `/logout` | Clear session cookies |
+| **GET** | `/me` | Get currently logged-in user profile |
+
+### 🛍️ Products (`/api/products`)
+| Method | Endpoint | Description | Auth |
 | :--- | :--- | :--- | :--- |
-| **POST** | `/api/auth/register` | Register a new user | No |
-| **POST** | `/api/auth/login` | Login user & get cookie/token | No |
-| **GET** | `/api/auth/me` | Get current authenticated user | Yes |
-| **POST** | `/api/products` | Create a new product (Seller only) | Yes |
-| **GET** | `/api/products` | Get all products with filters/pagination | No |
-| **POST** | `/api/orders` | Create Stripe Checkout session | Yes |
-| **GET** | `/api/vendors` | List all active vendors | No |
-| **POST** | `/api/chat` | AI Chatbot interaction | No |
+| **GET** | `/` | Get all products (with pagination/filters) | Public |
+| **GET** | `/:id` | Get single product details | Public |
+| **GET** | `/top-rated` | Get featured/top-rated products | Public |
+| **POST** | `/` | Create a new product | Seller |
+| **GET** | `/vendor` | Get products belonging to the logged-in seller | Seller |
+| **PUT** | `/:id` | Update product details | Seller |
+| **DELETE** | `/:id` | Remove a product | Seller |
 
-### Middleware
--   `protect`: Verifies the JWT token from cookies.
--   `authorizeRoles`: Restricts access based on user role (`admin`, `seller`, `buyer`).
+### 🏬 Vendors (`/api/vendors`)
+| Method | Endpoint | Description | Auth |
+| :--- | :--- | :--- | :--- |
+| **GET** | `/` | List all active vendors | Public |
+| **GET** | `/:id` | Get vendor storefront profile | Public |
+| **GET** | `/:id/products` | Get products of a specific vendor | Public |
+| **POST** | `/create` | Initialize vendor store | Seller |
+| **PUT** | `/:id` | Update vendor profile (logo, banner, etc.) | Seller |
+
+### 🛒 Orders (`/api/orders`)
+| Method | Endpoint | Description | Auth |
+| :--- | :--- | :--- | :--- |
+| **POST** | `/` | Create order & Stripe Checkout session | Buyer |
+| **GET** | `/my` | Get current customer's order history | Buyer |
+| **GET** | `/vendor` | Get sales orders for a specific seller | Seller |
+| **GET** | `/success` | Retrieve order details via Stripe session ID | Public |
+
+### 🛡️ Admin (`/api/admin`)
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| **GET** | `/dashboard` | System-wide statistics and overview |
+| **GET** | `/users` | List all registered users |
+| **GET** | `/vendors` | List all vendor accounts |
+| **GET** | `/active-users` | Count of currently active buyers |
+| **GET** | `/active-sellers` | Count of currently active sellers |
+| **PUT** | `/users/:id` | Toggle user status (Active/Inactive) |
+| **PUT** | `/users/:id/block` | Block/Unblock a user account |
+| **GET** | `/commission` | View system revenue from sales commissions |
+
+### 👤 Buyer (`/api/buyers`)
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| **GET** | `/dashboard` | Buyer account overview |
+| **GET** | `/vendors` | List vendors followed by the buyer |
+| **POST** | `/vendors/:id/follow` | Follow a specific vendor |
+| **DELETE** | `/vendors/:id/follow` | Unfollow a vendor |
+| **PUT** | `/profile` | Complete/Update buyer profile information |
+
+### 🤖 Chatbot (`/api/chat`)
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| **POST** | `/` | Send message to AI assistant (OpenRouter) |
+
+### ☁️ Cloudinary (`/api`)
+| Method | Endpoint | Description | Auth |
+| :--- | :--- | :--- | :--- |
+| **GET** | `/cloudinary-signature` | Generate secure signature for uploads | Seller |
+
+### 🪝 Webhooks (`/api`)
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| **POST** | `/stripe-webhook` | Handles Stripe checkout fulfillment (Stock reduction, revenue split) |
 
 ---
 
 ## 7. Database Schema
 
-### Models & Relationships
--   **User**: Stores base credentials, roles, and status.
--   **Vendor**: Extended profile for sellers (store name, revenue, bio). Linked to `User` (1:1).
--   **Buyer**: Extended profile for purchasers (followed vendors, stats). Linked to `User` (1:1).
--   **Product**: Contains details, price, stock, and links to `Vendor` (N:1).
--   **Order**: Tracks customer, items, total amount, and Stripe session status.
--   **Admin**: Tracks global system commission and revenue.
+- **User**: Name, Email, Password (hashed), Role (Admin/Seller/Buyer), Status (Active/Blocked).
+- **Vendor**: Store details, revenue tracking, stats, and link to User.
+- **Buyer**: Following list, purchase stats, and link to User.
+- **Product**: Name, price, stock, images, category, and vendor link.
+- **Order**: Customer link, items list, total amount, shipping info, payment status (Stripe tracking).
+- **Admin**: Global platform revenue and commission records.
 
 ---
 
-## 8. Environment & Configuration
+## 8. Environment Configuration
 
-### Backend (.env)
+### Backend `.env`
 ```env
 PORT=5000
-MONGO_URI=your_mongodb_uri
-JWT_SECRET=your_jwt_secret
+MONGO_URI=mongodb_connection_string
+JWT_SECRET=secure_session_secret
+STRIPE_SECRET_KEY=sk_test_...
+STRIPE_WEBHOOK_SECRET=whsec_...
+OPENROUTER_API_KEY=sk-or-...
+CLOUDINARY_CLOUD_NAME=name
+CLOUDINARY_API_KEY=key
+CLOUDINARY_API_SECRET=secret
 CLIENT_URL=http://localhost:5173
-STRIPE_SECRET_KEY=your_stripe_secret
-STRIPE_WEBHOOK_SECRET=your_webhook_secret
-OPENROUTER_API_KEY=your_ai_key
-CLOUDINARY_CLOUD_NAME=...
-```
-
-### Frontend (.env)
-```env
-VITE_API_URL=http://localhost:5000/api
-VITE_STRIPE_PUBLISHABLE_KEY=...
 ```
 
 ---
