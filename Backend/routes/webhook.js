@@ -55,9 +55,12 @@ router.post('/stripe-webhook', express.raw({ type: 'application/json' }), async 
         for (const oi of order.orderItems) {
           const vendor = await Vendor.findOne({ user: oi.vendor });
           if (vendor) {
-            vendor.totalRevenue += oi.price - (oi.quantity * 10);
+            const itemTotal = (oi.price || 0) * (oi.quantity || 1);
+            const commission = itemTotal * 0.1;
+            
+            vendor.totalRevenue += (itemTotal - commission);
             vendor.totalOrders += 1;
-            adminRevenue += 10;
+            adminRevenue += commission;
             await vendor.save();
           }
         }

@@ -1,18 +1,18 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import logo from '../assets/logo.png';
 
 const Footer = () => (
   <footer className="mt-12 border-t border-gray-100 bg-white">
     <div className="container py-10">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 pb-8 border-b border-gray-100">
         <div className="space-y-3">
-          <div className="flex items-center gap-2">
-            <span className="h-9 w-9 rounded-xl bg-indigo-600 text-white flex items-center justify-center text-sm font-semibold">
-              M
-            </span>
+          <Link to="/" className="flex items-center gap-2">
+            <img src={logo} alt="Marketplace Logo" className="h-9 w-auto rounded-xl" />
             <span className="font-semibold text-gray-900 tracking-tight">
               Marketplace
             </span>
-          </div>
+          </Link>
           <p className="text-sm text-gray-600 leading-relaxed max-w-sm">
             Shop curated collections from verified independent vendors worldwide.
           </p>
@@ -37,11 +37,11 @@ const Footer = () => (
             Shop
           </p>
           <ul className="space-y-2 text-sm text-gray-600">
-            <li><a href="#" className="hover:text-gray-900 hover:no-underline">All Products</a></li>
-            <li><a href="#" className="hover:text-gray-900 hover:no-underline">Top‑rated</a></li>
-            <li><a href="#" className="hover:text-gray-900 hover:no-underline">New Arrivals</a></li>
-            <li><a href="#" className="hover:text-gray-900 hover:no-underline">Categories</a></li>
-            <li><a href="#" className="hover:text-gray-900 hover:no-underline">Cart</a></li>
+            <li><Link to="/products" className="hover:text-gray-900 transition-colors">All Products</Link></li>
+            <li><Link to="/products" className="hover:text-gray-900 transition-colors">Top‑rated</Link></li>
+            <li><Link to="/products" className="hover:text-gray-900 transition-colors">New Arrivals</Link></li>
+            <li><Link to="/products" className="hover:text-gray-900 transition-colors">Categories</Link></li>
+            <li><Link to="/cart" className="hover:text-gray-900 transition-colors">Cart</Link></li>
           </ul>
         </div>
 
@@ -50,10 +50,10 @@ const Footer = () => (
             Vendors
           </p>
           <ul className="space-y-2 text-sm text-gray-600">
-            <li><a href="#" className="hover:text-gray-900 hover:no-underline">Browse Vendors</a></li>
-            <li><a href="#" className="hover:text-gray-900 hover:no-underline">Become a Vendor</a></li>
-            <li><a href="#" className="hover:text-gray-900 hover:no-underline">Vendor Dashboard</a></li>
-            <li><a href="#" className="hover:text-gray-900 hover:no-underline">Commission Info</a></li>
+            <li><Link to="/vendors" className="hover:text-gray-900 transition-colors">Browse Vendors</Link></li>
+            <li><Link to="/auth/register" className="hover:text-gray-900 transition-colors">Become a Vendor</Link></li>
+            <li><Link to="/vendor/dashboard" className="hover:text-gray-900 transition-colors">Vendor Dashboard</Link></li>
+            <li><Link to="/" className="hover:text-gray-900 transition-colors">Commission Info</Link></li>
           </ul>
         </div>
 
@@ -62,10 +62,10 @@ const Footer = () => (
             Company
           </p>
           <ul className="space-y-2 text-sm text-gray-600">
-            <li><a href="#" className="hover:text-gray-900 hover:no-underline">About</a></li>
-            <li><a href="#" className="hover:text-gray-900 hover:no-underline">Support</a></li>
-            <li><a href="#" className="hover:text-gray-900 hover:no-underline">Privacy Policy</a></li>
-            <li><a href="#" className="hover:text-gray-900 hover:no-underline">Terms of Service</a></li>
+            <li><Link to="/" className="hover:text-gray-900 transition-colors">About</Link></li>
+            <li><Link to="/" className="hover:text-gray-900 transition-colors">Support</Link></li>
+            <li><Link to="/" className="hover:text-gray-900 transition-colors">Privacy Policy</Link></li>
+            <li><Link to="/" className="hover:text-gray-900 transition-colors">Terms of Service</Link></li>
           </ul>
         </div>
       </div>
@@ -82,9 +82,9 @@ const Footer = () => (
           Payments secured by Stripe
         </div>
         <div className="flex gap-4 text-xs text-gray-500">
-          <a href="#" className="hover:text-gray-900 hover:no-underline">Privacy</a>
-          <a href="#" className="hover:text-gray-900 hover:no-underline">Terms</a>
-          <a href="#" className="hover:text-gray-900 hover:no-underline">Cookies</a>
+          <Link to="/" className="hover:text-gray-900 transition-colors">Privacy</Link>
+          <Link to="/" className="hover:text-gray-900 transition-colors">Terms</Link>
+          <Link to="/" className="hover:text-gray-900 transition-colors">Cookies</Link>
         </div>
       </div>
     </div>
