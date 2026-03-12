@@ -8,44 +8,32 @@ const productRoutes = require("./routes/product.route.js");
 const orderRoutes = require("./routes/order.route.js");
 const adminRoutes = require("./routes/admin.routes.js");
 const cloudinaryRoutes = require("./routes/cloudinary.route.js");
-const vendorRoutes = require('./routes/vendor.routes');     
+const vendorRoutes = require('./routes/vendor.routes');
 const webhookRouter = require('./routes/webhook');
 const buyerRoutes = require('./routes/buyer.routes');
 const chatbotRoutes = require('./routes/chatbot.route');
 
 
-
-
-
-
 const app = express();
 
 // Connect Database
-connectDB();
-
-// Middlewares
 app.use(cors(
     {
-        origin: "http://localhost:5173",
+        origin: [
+            "http://localhost:5173", // local development
+            "https://multi-vendor-system-sigma.vercel.app" // production frontend
+        ],
         credentials: true,
     }
 ));
+connectDB();
+
+// Middlewares
 app.use(cookieParser());
-
-
 
 app.use('/api', webhookRouter); // the webhook uses raw parser internally
 
-
 app.use(express.json());
-
-app.use(
-    cors({
-        origin: "http://localhost:5173",
-        credentials: true,
-    })
-);
-
 
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
@@ -69,12 +57,12 @@ app.get("/health", (req, res) => {
 
 // Root Route
 app.get("/", (req, res) => {
-  res.send("Multi Vendor Backend API");
+    res.send("Multi Vendor Backend API");
 });
 
 // PORT
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
+    console.log(`🚀 Server running on port ${PORT}`);
 });
