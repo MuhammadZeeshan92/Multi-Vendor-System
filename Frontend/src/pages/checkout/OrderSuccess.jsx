@@ -90,13 +90,13 @@ const OrderSuccess = () => {
                 <div>
                   <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Order ID</p>
                   <p className="text-sm font-mono text-gray-700 bg-white border border-gray-200 px-3 py-1.5 rounded-lg inline-block shadow-sm">
-                    {order._id}
+                    {order?._id}
                   </p>
                 </div>
                 <div className="md:text-right">
                   <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Total Paid</p>
                   <p className="text-2xl font-bold text-indigo-600">
-                    Rs {order.totalAmount.toLocaleString()}
+                    Rs {order?.totalAmount?.toLocaleString()}
                   </p>
                 </div>
               </div>
@@ -105,23 +105,23 @@ const OrderSuccess = () => {
               <div className="bg-white rounded-2xl border border-gray-100 p-4 md:p-6 shadow-sm">
                 <h2 className="text-sm font-bold text-gray-900 mb-4 border-b border-gray-50 pb-3">Order Items</h2>
                 <div className="space-y-4">
-                  {order.orderItems.map((item) => (
-                    <div key={item._id} className="flex justify-between items-center group">
+                  {order?.orderItems?.map((item) => (
+                    <div key={item?._id} className="flex justify-between items-center group">
                       <div className="flex items-center gap-4">
                         <div className="w-10 h-10 bg-indigo-50 rounded-lg flex items-center justify-center text-indigo-500 font-bold text-xs ring-1 ring-inset ring-indigo-500/10">
-                          {item.quantity}x
+                          {item?.quantity}x
                         </div>
                         <div>
                           <p className="text-sm font-semibold text-gray-800 group-hover:text-indigo-600 transition-colors">
-                            {item.product.name}
+                            {item?.product?.name}
                           </p>
                           <p className="text-xs text-gray-500">
-                            Rs {item.price.toLocaleString()} per unit
+                            Rs {item?.price?.toLocaleString()} per unit
                           </p>
                         </div>
                       </div>
                       <p className="text-sm font-bold text-gray-900">
-                        Rs {(item.quantity * item.price).toLocaleString()}
+                        Rs {(item?.quantity * item?.price).toLocaleString()}
                       </p>
                     </div>
                   ))}
