@@ -24,8 +24,7 @@ exports.getDashboardStats = async (req, res) => {
     });
 
     const admin = await Admin.findOne();
-    const commission = admin.commission;
-
+    const revenue = admin.commission.reduce((sum, item) => sum + item.amount, 0);
 
     res.json({
       totalUsers,
@@ -33,8 +32,7 @@ exports.getDashboardStats = async (req, res) => {
       activeUsers,
       activeVendors,
       blockedUsers,
-      revenue: 0,      // placeholder
-      commission: commission,   // placeholder
+      totalCommission: revenue, // Sending as totalCommission for clarity
     });
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -112,7 +110,7 @@ exports.getActiveSellers = async (req, res) => {
 // ✅ Get Buyers Only
 exports.getUsers = async (req, res) => {
   try {
-    const users = await User.find({ role: "buyer" ,isActive: false, isBlocked: false}).select("-password");
+    const users = await User.find({ role: "buyer", isActive: false, isBlocked: false }).select("-password");
     res.json(users);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -122,7 +120,7 @@ exports.getUsers = async (req, res) => {
 // ✅ Get Vendors Only
 exports.getVendors = async (req, res) => {
   try {
-    const vendors = await User.find({ role: "seller",isActive: false, isBlocked: false }).select("-password");
+    const vendors = await User.find({ role: "seller", isActive: false, isBlocked: false }).select("-password");
     res.json(vendors);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -196,7 +194,7 @@ exports.getCommission = async (req, res) => {
       if (start && new Date(start) > cDate) {
         isWithinRange = false;
       }
-      
+
       if (end) {
         const endDate = new Date(end);
         endDate.setHours(23, 59, 59, 999);
