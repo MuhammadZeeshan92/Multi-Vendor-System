@@ -4,6 +4,8 @@ import { useSelector } from 'react-redux';
 import { logoutUser } from '../features/auth/authSlice';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
+import logo from '../assets/logo.png';
+
 const NavItem = ({ to, children, onClick }) => (
   <NavLink
     to={to}
@@ -29,7 +31,7 @@ const Navbar = () => {
     e.preventDefault();
     await dispatch(logoutUser()).unwrap();
     toast.info('Logged out successfully');
-    navigate('/auth/login',{ replace: true, state: {} });
+    navigate('/auth/login', { replace: true, state: {} });
   };
 
   const [isOpen, setIsOpen] = useState(false);
@@ -62,11 +64,9 @@ const Navbar = () => {
   return (
     <nav className="bg-white/90 backdrop-blur border-b border-gray-100 sticky top-0 z-40">
       <div className="container flex items-center justify-between py-3">
-        <NavLink to="/" className="flex items-center gap-2">
-          <span className="h-8 w-8 rounded-xl bg-indigo-600 text-white flex items-center justify-center text-sm font-semibold">
-            M
-          </span>
-          <span className="font-semibold text-xl text-gray-900 tracking-tight">
+        <NavLink to="/" className="flex items-center">
+          <img src={logo} alt="Marketplace Logo" className="h-10 w-auto rounded-lg" />
+          <span className="font-semibold text-xl text-gray-900 tracking-tight mb-1">
             Marketplace
           </span>
         </NavLink>
