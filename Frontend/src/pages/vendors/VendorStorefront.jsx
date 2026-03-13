@@ -12,7 +12,6 @@ const VendorStorefront = () => {
   const dispatch = useDispatch();
   const { current, products, status, productsPagination } = useSelector((state) => state.vendors);
   console.log("Vendor",current,"Products", products);
-  console.log(id)
 
   useEffect(() => {
     if (!id) return;
@@ -52,9 +51,9 @@ const VendorStorefront = () => {
       <section>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-semibold text-gray-900">Products</h2>
-          {productsPagination?.total && (
+          {products && (
             <p className="text-sm text-gray-500">
-              {productsPagination.total} items
+              {products.length} items
             </p>
           )}
         </div>
