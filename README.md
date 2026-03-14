@@ -34,6 +34,9 @@ This project is a multi-tenant e-commerce platform designed to facilitate transa
 - **Cloudinary**: Cloud-based image management for product and profile media.
 - **OpenRouter API**: Powering the system's AI chatbot.
 
+
+- **Socket.IO**: Enables real-time bidirectional communication for the chat system.
+
 ---
 
 ## 3. Project Structure
@@ -278,7 +281,7 @@ CLIENT_URL=http://localhost:5173
 
 3.  **Frontend Setup**
     ```bash
-    cd ../Frontend
+    cd Frontend
     npm install
     # Create .env and add variables
     npm run dev
