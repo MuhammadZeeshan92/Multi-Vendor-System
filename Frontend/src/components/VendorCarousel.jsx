@@ -7,7 +7,6 @@ import Spinner from './Spinner';
 const VendorCarousel = () => {
   const dispatch = useDispatch();
   const { list, status } = useSelector((state) => state.vendors);
-  console.log(list)
 
   useEffect(() => {
     if (status === 'idle') {
