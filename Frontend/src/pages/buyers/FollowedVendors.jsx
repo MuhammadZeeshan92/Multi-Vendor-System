@@ -20,7 +20,7 @@ const FollowedVendors = () => {
   const [cat, setCat] = useState('All');
 
   // categories computed from whatever vendors we currently have
-  const categories = ['All', ...new Set(vendors.map(v => v.category || ''))];
+  const categories = ['All'];
 
   // ensure we have buyer data (stats + followed list)
   useEffect(() => {

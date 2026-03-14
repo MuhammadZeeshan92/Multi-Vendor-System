@@ -7,12 +7,14 @@ A comprehensive MERN stack (MongoDB, Express, React, Node.js) multi-vendor marke
 ## 1. Project Overview
 This project is a multi-tenant e-commerce platform designed to facilitate transactions between multiple vendors and customers. It features:
 - **Three-Tier User Roles**: Admin, Seller (Vendor), and Buyer.
-- **Vendor Storefronts**: Personalized pages for each seller with their specific products.
+- **Vendor Storefronts**: Personalized pages for each seller with their specific products and vendor profile where buyer can visit to view and can also communicate in real time.
 - **Product Discovery**: Global product search, filtering, and pagination.
 - **Advanced Cart System**: Multi-vendor cart management with session persistence.
 - **Secure Payments**: Integrated Stripe Checkout with webhook handling for order fulfillment.
+- **Real-Time Messaging**: Buyers and Vendors can communicate directly through a built-in chat system powered by WebSockets (Socket.IO), enabling instant messaging and persistent conversation history.
 - **AI Integration**: A dedicated chatbot for system assistance.
-- **Admin Management**: Overview of system users, vendor approvals, and revenue tracking.
+- **Buyer Experience**: Buyers can follow or unfollow vendors, track their order history and order status in real time, manage their personal profile, and communicate directly with vendors through the integrated chat system.
+- **Admin Management**: Overview of system users, vendor approvals/disapprovals, Blocking users and revenue tracking.
 
 ---
 
@@ -112,6 +114,29 @@ The application uses `React Router` with custom guards to control access:
 - **vendorSlice**: Handles vendor registration and storefront data.
 - **adminSlice**: Manages system users and global stats.
 
+### Real-Time Chat System
+
+The platform includes a real-time messaging system allowing Buyers and Vendors to communicate directly inside the marketplace.
+
+#### Chat Flow
+1. A Buyer clicks **"Message Vendor"** on a product or vendor page.
+2. The system creates or retrieves a conversation between the Buyer and Vendor.
+3. The user is redirected to the chat interface.
+4. Messages are exchanged instantly using WebSockets (Socket.IO).
+5. All messages are stored in MongoDB to maintain conversation history.
+
+#### Key Frontend Components
+- **ChatPage**: Main chat interface displaying conversation history and message input.
+- **ChatButton**: Button used by buyers to initiate chat with vendors.
+- **ChatMessage**: UI component used to render individual messages.
+- **socketClient**: Establishes a Socket.IO connection to the backend server.
+- **chatApi**: Handles REST API requests related to conversations and messages.
+
+#### Real-Time Communication
+The frontend connects to the backend Socket.IO server using the authenticated user's JWT token. Once connected, the client joins a chat room associated with the conversation ID.
+
+Messages are sent through the socket and broadcast to all participants in the conversation room.
+
 ---
 
 ## 6. Backend Documentation (Complete API Reference)
@@ -188,6 +213,12 @@ The application uses `React Router` with custom guards to control access:
 | :--- | :--- | :--- |
 | **POST** | `/stripe-webhook` | Handles Stripe checkout fulfillment (Stock reduction, revenue split) |
 
+### 💬 Chat System (/api/chat)
+
+ Method | Endpoint | Description | Auth
+ **POST** | /conversations | Create or retrieve a conversation between buyer and vendor | Buyer
+ **GET** | /conversations/:id/messages | Retrieve message history for a conversation | Buyer/Vendor
+
 ---
 
 ## 7. Database Schema
@@ -198,6 +229,8 @@ The application uses `React Router` with custom guards to control access:
 - **Product**: Name, price, stock, images, category, and vendor link.
 - **Order**: Customer link, items list, total amount, shipping info, payment status (Stripe tracking).
 - **Admin**: Global platform revenue and commission records.
+- **Conversation**: participants (User references), lastMessage, createdAt / updatedAt timestamps
+- **Message**: conversationId (Reference to Conversation), senderId (User reference), receiverId (User reference), text (Message content), status (sent, delivered, read), createdAt timestamp
 
 ---
 
