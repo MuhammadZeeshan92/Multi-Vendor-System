@@ -45,6 +45,8 @@ const VendorStorefront = () => {
         <title>{vendorTitle}</title>
         {current.banner && <meta property="og:image" content={current.banner} />}
       </Helmet>
+
+      
       <VendorProfileCard vendor={current} />
 
       <section>
