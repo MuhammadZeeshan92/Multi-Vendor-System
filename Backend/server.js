@@ -2,8 +2,13 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const connectDB = require("./config/db");
-const authRoutes = require("./routes/auth.route.js");
 const cookieParser = require("cookie-parser");
+
+const http = require("http");
+const { Server } = require("socket.io");
+const { initChatSocket } = require("./sockets/chatSocket");
+
+const authRoutes = require("./routes/auth.route.js");
 const productRoutes = require("./routes/product.route.js");
 const orderRoutes = require("./routes/order.route.js");
 const adminRoutes = require("./routes/admin.routes.js");
@@ -12,11 +17,28 @@ const vendorRoutes = require('./routes/vendor.routes');
 const webhookRouter = require('./routes/webhook');
 const buyerRoutes = require('./routes/buyer.routes');
 const chatbotRoutes = require('./routes/chatbot.route');
-
+const chatRoutes = require('./routes/chat.routes');
 
 const app = express();
 
+const server = http.createServer(app);
+
+const io = new Server(server, {
+  cors: {
+    origin: [
+      process.env.CLIENT_URL,
+      "http://localhost:5173",
+    ],
+    credentials: true,
+  },
+});
+
+initChatSocket(io);
+
+
 // Connect Database
+connectDB();
+
 app.use(cors(
     {
         origin: [
@@ -26,7 +48,6 @@ app.use(cors(
         credentials: true,
     }
 ));
-connectDB();
 
 // Middlewares
 app.use(cookieParser());
@@ -45,6 +66,7 @@ app.use('/api/vendors', vendorRoutes);
 // …later…
 app.use('/api/buyers', buyerRoutes);
 app.use('/api/chat', chatbotRoutes);
+app.use('/api', chatRoutes);
 
 
 
@@ -63,6 +85,7 @@ app.get("/", (req, res) => {
 // PORT
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
+    console.log("Socket Server running on port", PORT);
     console.log(`🚀 Server running on port ${PORT}`);
 });

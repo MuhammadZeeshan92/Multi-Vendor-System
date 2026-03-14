@@ -43,6 +43,9 @@ import FollowedVendors from './pages/buyers/FollowedVendors';
 import CreateStore from './pages/vendor/CreateStore';
 import CompleteProfile from './pages/buyers/CompleteProfile';
 
+import ChatPage from "./pages/chat/ChatPage";
+import VendorInbox from "./pages/vendor/VendorInbox";
+
 function App() {
   const dispatch = useDispatch();
 
@@ -74,6 +77,12 @@ function App() {
             {/* Vendor discovery & storefront */}
             <Route path="/vendors" element={<VendorList />} />
             <Route path="/vendors/:id" element={<VendorStorefront />} />
+
+
+            <Route
+              path="/chat/:conversationId"
+              element={<ChatPage />}
+            />
 
             <Route element={<ProtectedRoute />}>
               <Route element={<RoleRoute allowedRoles={['buyer']} />}>
@@ -108,6 +117,7 @@ function App() {
                     element={<CreateStore />}
                   />
                   <Route path="/vendor/dashboard" element={<VendorDashboard />} />
+                  <Route path="/vendor/messages" element={<VendorInbox />} />
                   <Route path="/vendor/products" element={<VendorProducts />} />
                   <Route path="/vendor/products/add" element={<AddProduct />} />
                   <Route path="/vendor/sales" element={<VendorSales />} />

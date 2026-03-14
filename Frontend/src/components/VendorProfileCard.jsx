@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { fetchBuyerData } from '../features/buyers/buyerSlice';
 import { followVendor, unfollowVendor } from '../features/buyers/buyerSlice';
+import ChatButton from './ChatButton';
 
 const VendorProfileCard = ({ vendor }) => {
   const user = useSelector((state) => state.auth.user);
@@ -21,7 +22,6 @@ const VendorProfileCard = ({ vendor }) => {
   const isFollowing = Boolean(vendor && followed.includes(vendor._id));
   const isWorking = status === 'loading';
   const handleButton = () => {
-    console.log('User:', user, 'Vendor:', vendor, 'Is Following:', isFollowing);
 
     if (!user) return; // or navigate('/auth/login') if you want
     if (user.role !== 'buyer') return;
@@ -77,7 +77,7 @@ const VendorProfileCard = ({ vendor }) => {
           <div className="flex-1 space-y-1 text-center md:text-left min-w-0">
             <div className="flex flex-col md:flex-row md:items-center md:gap-2 justify-center md:justify-start">
               <h1 className="text-2xl font-semibold text-gray-900 truncate">{vendor.name}</h1>
-              {vendor.isActive && (
+              {vendor?.user?.isActive && (
                 <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 text-xs font-semibold">
                   <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
                   Verified
@@ -95,7 +95,7 @@ const VendorProfileCard = ({ vendor }) => {
                   ⭐ <span className="font-medium">{vendor.rating.toFixed(1)}</span> / 5
                 </span>
               )}
-              {vendor.totalSales != null && <span>{vendor.totalSales} sales</span>}
+              {vendor.totalOrders != null && <span>{vendor.totalOrders} Orders</span>}
               {vendor.location && <span>{vendor.location}</span>}
             </div>
 
@@ -112,6 +112,10 @@ const VendorProfileCard = ({ vendor }) => {
                   ? (isFollowing ? 'Unfollow' : 'Follow Store')
                   : 'View Store'}
               </button>
+
+              {user?.role === 'buyer' && (
+                <ChatButton vendorId={vendor._id} />
+              )}
             </div>
           </div>
         </div>

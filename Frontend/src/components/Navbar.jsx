@@ -85,7 +85,12 @@ const Navbar = () => {
 
           {user ? (
             <>
-              {user.role === 'seller' && <NavItem to="/vendor/dashboard">Vendor</NavItem>}
+              {user.role === 'seller' && (
+                <>
+                  <NavItem to="/vendor/dashboard">Vendor</NavItem>
+                  <NavItem to="/vendor/messages">Messages</NavItem>
+                </>
+              )}
               {user.role === 'admin' && <NavItem to="/admin/dashboard">Admin</NavItem>}
               {user.role === 'buyer' && <NavItem to="/buyer/dashboard">Buyer</NavItem>}
               <button
@@ -155,9 +160,14 @@ const Navbar = () => {
               {user ? (
                 <>
                   {user.role === 'seller' && (
-                    <NavItem to="/vendor/dashboard" onClick={() => setIsOpen(false)}>
-                      Vendor Dashboard
-                    </NavItem>
+                    <>
+                      <NavItem to="/vendor/dashboard" onClick={() => setIsOpen(false)}>
+                        Vendor Dashboard
+                      </NavItem>
+                      <NavItem to="/vendor/messages" onClick={() => setIsOpen(false)}>
+                        Messages
+                      </NavItem>
+                    </>
                   )}
                   {user.role === 'admin' && (
                     <NavItem to="/admin/dashboard" onClick={() => setIsOpen(false)}>
