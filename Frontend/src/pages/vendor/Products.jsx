@@ -45,6 +45,14 @@ const VendorProducts = () => {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="flex h-[50vh] items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-gray-50/50 min-h-screen pb-12">
       <PageHero 
@@ -62,8 +70,6 @@ const VendorProducts = () => {
       />
 
       <Page className="container-mt-8 relative z-10 space-y-6">
-
-        {loading && <div className="text-sm text-gray-500">Loading products...</div>}
         {error && <div className="text-sm text-red-600">{error}</div>}
 
         {!loading && !error && (

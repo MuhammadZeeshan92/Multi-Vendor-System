@@ -88,7 +88,6 @@ const Navbar = () => {
               {user.role === 'seller' && (
                 <>
                   <NavItem to="/vendor/dashboard">Vendor</NavItem>
-                  <NavItem to="/vendor/messages">Messages</NavItem>
                 </>
               )}
               {user.role === 'admin' && <NavItem to="/admin/dashboard">Admin</NavItem>}
@@ -163,9 +162,6 @@ const Navbar = () => {
                     <>
                       <NavItem to="/vendor/dashboard" onClick={() => setIsOpen(false)}>
                         Vendor Dashboard
-                      </NavItem>
-                      <NavItem to="/vendor/messages" onClick={() => setIsOpen(false)}>
-                        Messages
                       </NavItem>
                     </>
                   )}

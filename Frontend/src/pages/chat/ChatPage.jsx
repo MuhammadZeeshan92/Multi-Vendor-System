@@ -14,7 +14,7 @@ const ChatPage = () => {
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState("");
 
-  const messagesEndRef = useRef();
+  const messagesContainerRef = useRef(null);
 
   useEffect(() => {
     const loadMessages = async () => {
@@ -38,7 +38,11 @@ const ChatPage = () => {
   }, [conversationId, token]);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    const container = messagesContainerRef.current;
+
+    if (container) {
+      container.scrollTop = container.scrollHeight;
+    }
   }, [messages]);
 
   const sendMessage = () => {
@@ -71,15 +75,17 @@ const ChatPage = () => {
         </div>
 
         {/* Chat Messages Area */}
-        <div className="flex-1 overflow-y-auto p-4 sm:p-6 bg-gray-50 flex flex-col gap-1">
-        {messages.map((msg) => (
-          <ChatMessage
-            key={msg?._id}
-            message={msg}
-            currentUser={user?._id}
-          />
-        ))}
-        <div ref={messagesEndRef} />
+        <div
+          ref={messagesContainerRef}
+          className="flex-1 overflow-y-auto p-4 sm:p-6 bg-gray-50 flex flex-col gap-1"
+        >
+          {messages.map((msg) => (
+            <ChatMessage
+              key={msg?._id}
+              message={msg}
+              currentUser={user?._id}
+            />
+          ))}
         </div>
 
         {/* Chat Input Area */}
@@ -94,7 +100,7 @@ const ChatPage = () => {
               autoFocus
             />
           </div>
-          
+
           <button
             onClick={sendMessage}
             disabled={!text.trim()}

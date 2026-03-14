@@ -7,11 +7,12 @@ const Vendor = require("../models/Vendor");
  */
 exports.createOrGetConversation = async (req, res) => {
   try {
-    const { buyerId, vendorId } = req.body;
+    const { vendorId } = req.body;
+    const buyerId = req.user._id.toString();
 
-    if (!buyerId || !vendorId) {
+    if (!vendorId) {
       return res.status(400).json({
-        message: "buyerId and vendorId required",
+        message: "vendorId required",
       });
     }
 
@@ -23,7 +24,13 @@ exports.createOrGetConversation = async (req, res) => {
       });
     }
 
-    const vendorUserId = vendor.user;
+    const vendorUserId = vendor.user.toString();
+
+    if (buyerId === vendorUserId) {
+      return res.status(400).json({
+        message: "You cannot start a conversation with yourself.",
+      });
+    }
 
     const participants = [buyerId, vendorUserId].sort();
 

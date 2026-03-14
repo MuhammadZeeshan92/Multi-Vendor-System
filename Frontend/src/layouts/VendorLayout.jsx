@@ -11,6 +11,7 @@ const VendorLayout = () => {
     { to: '/vendor/products', label: 'Products' },
     { to: '/vendor/products/add', label: 'Add Product' },
     { to: '/vendor/sales', label: 'Sales' },
+    { to: '/vendor/messages', label: 'Messages' },
   ];
   return (
     <div className="flex bg-gray-50 min-h-screen relative">

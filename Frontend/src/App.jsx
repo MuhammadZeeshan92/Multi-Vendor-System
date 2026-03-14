@@ -79,12 +79,12 @@ function App() {
             <Route path="/vendors/:id" element={<VendorStorefront />} />
 
 
+
+            <Route element={<ProtectedRoute />}>
             <Route
               path="/chat/:conversationId"
               element={<ChatPage />}
             />
-
-            <Route element={<ProtectedRoute />}>
               <Route element={<RoleRoute allowedRoles={['buyer']} />}>
                 <Route element={<BuyerLayout />}>
                   <Route path="/buyer/complete-profile" element={<CompleteProfile />} />
