@@ -215,9 +215,10 @@ Messages are sent through the socket and broadcast to all participants in the co
 
 ### 💬 Chat System (/api/chat)
 
- Method | Endpoint | Description | Auth
- **POST** | /conversations | Create or retrieve a conversation between buyer and vendor | Buyer
- **GET** | /conversations/:id/messages | Retrieve message history for a conversation | Buyer/Vendor
+| Method | Endpoint | Description | Auth |
+|--------|---------|------------|------|
+| POST   | /conversations | Create or retrieve a conversation between buyer and vendor | Buyer |
+| GET    | /conversations/:id/messages | Retrieve message history for a conversation | Buyer/Vendor |
 
 ---
 
