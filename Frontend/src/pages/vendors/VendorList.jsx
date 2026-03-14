@@ -9,7 +9,6 @@ import PageHero from '../../components/PageHero';
 const VendorList = () => {
   const dispatch = useDispatch();
   const { list, status } = useSelector((state) => state.vendors);
-  console.log(list)
   useEffect(() => {
     dispatch(fetchPublicVendors({ featured: true, limit: 24 }));
   }, [dispatch]);

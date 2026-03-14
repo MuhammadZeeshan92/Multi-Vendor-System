@@ -12,7 +12,6 @@ const VendorInbox = () => {
     const loadData = async () => {
       try {
         const data = await fetchConversations();
-        console.log(data);
         setConversations(data);
       } catch (err) {
         console.error(err);

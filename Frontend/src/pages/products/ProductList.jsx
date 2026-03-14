@@ -15,8 +15,6 @@ const ProductList = () => {
   const dispatch = useDispatch();
   const { list, status, pagination } = useSelector((state) => state.products);
   const { list: vendors } = useSelector((state) => state.vendors);
-  // console.log('Products:', list);
-  // console.log('Vendors:', vendors);
 
   const [filters, setFilters] = useState({
     search: '',

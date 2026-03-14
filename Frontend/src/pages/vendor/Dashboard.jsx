@@ -8,8 +8,6 @@ const VendorDashboard = () => {
   const dispatch = useDispatch();
   const authUser = useSelector(s => s.auth.user);
   const { current: vendor } = useSelector(s => s.vendors);
-  console.log(vendor)
-  console.log(authUser)
 
   useEffect(() => {
     if (authUser?.vendor?._id) {

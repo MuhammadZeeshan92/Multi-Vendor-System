@@ -16,7 +16,6 @@ const CreateStore = () => {
   const [previews, setPreviews] = useState({ logo: null, banner: null });
   const [uploadProgress, setUploadProgress] = useState({ logo: 0, banner: 0 });
   const [uploading, setUploading] = useState(false);
-  console.log(user)
 
   // Revoke previews on unmount
   useEffect(() => {

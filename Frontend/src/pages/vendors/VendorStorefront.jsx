@@ -11,7 +11,6 @@ const VendorStorefront = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const { current, products, status, productsPagination } = useSelector((state) => state.vendors);
-  console.log("Vendor",current,"Products", products);
 
   useEffect(() => {
     if (!id) return;
