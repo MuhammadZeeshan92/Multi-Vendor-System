@@ -55,7 +55,7 @@ const Chatbot = () => {
     <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end">
       {/* Chat Window */}
       {isOpen && (
-        <div className="w-80 sm:w-96 bg-white rounded-2xl shadow-2xl border border-gray-100 mb-4 flex flex-col overflow-hidden animate-slideUp">
+        <div className="w-80 sm:w-96 h-[450px] bg-white rounded-2xl shadow-2xl border border-gray-100 mb-4 flex flex-col overflow-hidden animate-slideUp">
           <div className="bg-indigo-600 p-4 text-white flex justify-between items-center">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center font-bold">M</div>
@@ -68,7 +68,7 @@ const Chatbot = () => {
             </button>
           </div>
 
-          <div ref={scrollRef} className="h-48 overflow-y-auto p-4 space-y-4 bg-gray-50/50">
+          <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50/50">
             {messages.map((msg, i) => (
               <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                 <div className={`max-w-[80%] p-3 rounded-2xl text-sm break-words ${

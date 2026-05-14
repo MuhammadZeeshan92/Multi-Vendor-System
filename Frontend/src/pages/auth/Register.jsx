@@ -12,6 +12,7 @@ const Register = () => {
   const dispatch = useDispatch();
   const { user, status, error } = useSelector((state) => state.auth);
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
   const [form, setForm] = useState({
     name: '',
     email: '',
@@ -77,16 +78,39 @@ const Register = () => {
                   placeholder="name@example.com"
                   className="bg-gray-50/50"
                 />
-                <Input
-                  label="Password"
-                  name="password"
-                  type="password"
-                  value={form.password}
-                  onChange={handleChange}
-                  required
-                  placeholder="••••••••"
-                  className="bg-gray-50/50"
-                />
+                <div className="space-y-1.5">
+                  <label className="text-sm font-semibold text-gray-700 ml-1">Password</label>
+                  <div className="relative">
+                    <input
+                      name="password"
+                      type={showPassword ? 'text' : 'password'}
+                      value={form.password}
+                      onChange={handleChange}
+                      required
+                      placeholder="••••••••"
+                      className="block w-full bg-gray-50/50 border border-gray-200 rounded-xl px-4 py-3 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors p-1 rounded"
+                    >
+                      <svg 
+                        className="w-5 h-5 transition-all duration-200" 
+                        fill="none" 
+                        stroke="currentColor" 
+                        viewBox="0 0 24 24"
+                        opacity={showPassword ? "1" : "0.6"}
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        {!showPassword && (
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6" />
+                        )}
+                      </svg>
+                    </button>
+                  </div>
+                </div>
                 
                 <div className="space-y-1.5">
                   <label className="text-sm font-semibold text-gray-700 ml-1">I want to join as a</label>
