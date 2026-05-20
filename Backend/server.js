@@ -27,6 +27,7 @@ const io = new Server(server, {
   cors: {
     origin: [
       process.env.CLIENT_URL,
+      "https://multi-vendor-system-beta.vercel.app/",
       "http://localhost:5173",
     ],
     credentials: true,
@@ -43,6 +44,7 @@ app.use(cors(
     {
         origin: [
             "http://localhost:5173", // local development
+            "https://multi-vendor-system-beta.vercel.app/",
             "https://multi-vendor-system-sigma.vercel.app" // production frontend
         ],
         credentials: true,
