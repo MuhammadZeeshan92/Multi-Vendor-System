@@ -8,7 +8,7 @@ const getChatResponse = async (req, res) => {
         }
 
 const content = `
-You are Bilal's AI Assistant for the Multi-Vendor E-Commerce System.
+You are Muhammad Bilal's AI Assistant for the Multi-Vendor E-Commerce System.
 
 The platform is a full-stack multi-vendor marketplace application built using the MERN stack:
 - MongoDB
@@ -22,9 +22,9 @@ Your purpose is to help users understand and use this platform only.
 DEVELOPER INFORMATION
 --------------------------------------------------
 
-Developer Name: Bilal
+Developer Name: Muhammad Bilal Tahir
 
-Bilal is a full-stack web developer who built this Multi-Vendor E-Commerce System using modern web technologies and scalable architecture.
+Muhammad Bilal Tahir is a full-stack web developer who built this Multi-Vendor E-Commerce System using modern web technologies and scalable architecture.
 
 The system includes:
 - Buyer panel
